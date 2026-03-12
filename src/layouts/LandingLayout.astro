@@ -1,0 +1,104 @@
+---
+/**
+ * LandingLayout.astro
+ * Layout para landing pages de conversión (localidades, campañas, etc.)
+ * Navbar simplificado (sin links de contenido, solo logo + CTA) y Footer mínimo.
+ * Sin breadcrumbs para reducir distracciones en el funnel de conversión.
+ * Referencia: docs/patterns/architecture.md → Layouts → LandingLayout
+ * Referencia: docs/context/business-logic.md → Flujo de Conversión
+ */
+
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  noindex?: boolean;
+  schema?: object;
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  canonicalUrl,
+  noindex = false,
+  schema,
+} = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  canonicalUrl={canonicalUrl}
+  noindex={noindex}
+  schema={schema}
+>
+  <!-- Navbar simplificado — solo logo + CTA, sin distracciones -->
+  <header class="sticky top-0 z-50 w-full bg-white border-b border-neutral-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a
+          href="/"
+          class="flex items-center gap-2 font-display font-bold text-xl text-neutral-900 hover:text-primary-600 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-sm"
+          aria-label="Business Dollar — Inicio"
+        >
+          <span
+            class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-600 text-white text-sm font-bold"
+            aria-hidden="true"
+          >$</span>
+          <span>Business <span class="text-primary-600">Dollar</span></span>
+        </a>
+
+        <!-- CTA único -->
+        <div class="flex items-center gap-3">
+          <a
+            href="https://app.business-dollar.pe/login"
+            class="hidden sm:inline text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors duration-150 px-2 py-1 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          >
+            Ingresar
+          </a>
+          <a
+            href="https://app.business-dollar.pe/register"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+          >
+            Abrir cuenta gratis
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <slot />
+  </main>
+
+  <!-- Footer mínimo para landings -->
+  <footer class="bg-neutral-900 text-neutral-400 py-8" aria-label="Pie de página">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- YMYL disclaimer -->
+      <p class="text-xs text-neutral-500 text-center leading-relaxed mb-6 max-w-2xl mx-auto">
+        Business Dollar es una casa de cambio digital regulada por la SBS del Perú. El tipo de cambio varía
+        constantemente. Los valores mostrados son referenciales y no constituyen asesoría financiera.
+      </p>
+
+      <div class="border-t border-neutral-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
+        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1">
+          <span>&copy; {new Date().getFullYear()} Business Dollar S.A.C.</span>
+          <a href="/terminos-y-condiciones" class="hover:text-neutral-300 transition-colors">Términos</a>
+          <a href="/politica-de-privacidad" class="hover:text-neutral-300 transition-colors">Privacidad</a>
+          <a href="/libro-de-reclamaciones" class="hover:text-neutral-300 transition-colors">Reclamaciones</a>
+        </div>
+        <a href="/" class="text-neutral-600 hover:text-neutral-400 transition-colors">
+          business-dollar.pe
+        </a>
+      </div>
+    </div>
+  </footer>
+</BaseLayout>

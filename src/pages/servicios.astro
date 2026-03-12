@@ -1,0 +1,305 @@
+---
+/**
+ * servicios.astro
+ * Descripción detallada del servicio de cambio de divisas.
+ * Schema: FinancialService con serviceType, areaServed, horarios.
+ * Referencia: docs/context/project-roadmap.md → Fase 2.3
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+import { bankPartners } from "../data/company";
+
+const financialServiceSchema = {
+  "@type": "FinancialService",
+  name: "Cambio de dólares online — Business Dollar",
+  description:
+    "Servicio de compra y venta de dólares (USD/PEN) online, regulado por la SBS del Perú. Tipo de cambio competitivo, sin comisiones, acreditación el mismo día.",
+  url: "https://business-dollar.pe/servicios",
+  serviceType: ["Cambio de divisas", "Compra de dólares", "Venta de dólares"],
+  areaServed: { "@type": "Country", name: "Perú" },
+  currenciesAccepted: "PEN, USD",
+  openingHours: "Mo-Fr 09:00-18:00",
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Servicios de cambio de divisas",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "FinancialProduct",
+          name: "Compra de dólares (Soles → Dólares)",
+          description: "Envías soles desde tu cuenta bancaria y recibimos dólares en tu cuenta.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "FinancialProduct",
+          name: "Venta de dólares (Dólares → Soles)",
+          description: "Envías dólares y recibes soles al tipo de cambio acordado.",
+        },
+      },
+    ],
+  },
+  provider: {
+    "@type": "Organization",
+    name: "Business Dollar",
+    url: "https://business-dollar.pe",
+  },
+};
+
+const comparisonRows = [
+  {
+    feature: "Tipo de cambio",
+    bd: "Competitivo (cercano al mercado)",
+    banks: "Spread alto (3-5%)",
+    casas: "Variable, a veces sin transparencia",
+  },
+  {
+    feature: "Comisiones",
+    bd: "Sin comisiones",
+    banks: "ITF + comisión por transferencia",
+    casas: "A veces cobran comisión",
+  },
+  {
+    feature: "Disponibilidad",
+    bd: "24/7 online",
+    banks: "Horario bancario",
+    casas: "Horario presencial",
+  },
+  {
+    feature: "Seguridad",
+    bd: "Regulado SBS, HTTPS, 2FA",
+    banks: "Regulado SBS",
+    casas: "Variable — no siempre reguladas",
+  },
+  {
+    feature: "Colas / esperas",
+    bd: "Ninguna",
+    banks: "Sí",
+    casas: "Sí",
+  },
+  {
+    feature: "Documentación",
+    bd: "Solo DNI o RUC (registro único)",
+    banks: "Datos bancarios, formularios",
+    casas: "DNI presencial, declaraciones",
+  },
+  {
+    feature: "Montos mínimos",
+    bd: "Desde $50 USD",
+    banks: "Variable por banco",
+    casas: "Variable",
+  },
+];
+
+const faqs = [
+  {
+    q: "¿Cómo compro dólares en Business Dollar?",
+    a: "Regístrate, elige el monto en soles que deseas cambiar, transferes desde tu banco y recibimos los dólares en tu cuenta designada. Todo el proceso toma menos de 24 horas.",
+  },
+  {
+    q: "¿Cuál es el monto mínimo para operar?",
+    a: "El monto mínimo es de $50 USD o su equivalente en soles. No hay límite máximo para personas naturales que completen el proceso de verificación.",
+  },
+  {
+    q: "¿Cuánto tiempo tarda la acreditación?",
+    a: "En promedio, las operaciones se acreditan el mismo día hábil si la transferencia se recibe antes de las 3pm. Las transferencias recibidas después se procesan el siguiente día hábil.",
+  },
+  {
+    q: "¿Qué bancos son compatibles?",
+    a: `Trabajamos con todos los bancos del sistema financiero peruano: ${bankPartners.join(", ")} y más. Solo necesitas tener una cuenta en soles y una cuenta en dólares.`,
+  },
+];
+---
+
+<PageLayout
+  title="Servicios de cambio de dólares online"
+  description="Compra y venta de dólares online al mejor tipo de cambio. Sin comisiones, regulado por la SBS. Acreditación el mismo día. Compara con bancos y casas de cambio."
+  schema={financialServiceSchema}
+  breadcrumbs={[{ label: "Servicios", href: "/servicios" }]}
+>
+  <!-- YMYL Disclaimer -->
+  <div class="bg-amber-50 border-b border-amber-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-xs text-amber-800">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      <span><strong>Aviso:</strong> Business Dollar es una casa de cambio digital regulada por la SBS. El tipo de cambio varía constantemente. Los valores son referenciales y se confirman al iniciar la operación.</span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="bg-white border-b border-neutral-100 py-16 md:py-20" aria-labelledby="servicios-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <h1 id="servicios-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-6">
+          Servicio de cambio de dólares online
+        </h1>
+        <p class="text-xl text-neutral-600 leading-relaxed mb-6">
+          Compra y vende dólares desde tu computadora o celular, al mejor tipo de cambio del mercado, sin comisiones y con la seguridad que te da operar con una empresa regulada por la SBS.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a
+            href="https://app.business-dollar.pe/register"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+          >
+            Iniciar operación
+          </a>
+          <a
+            href="#como-funciona"
+            class="inline-flex items-center justify-center gap-2 border-2 border-neutral-200 text-neutral-700 font-semibold px-6 py-3 rounded-xl hover:border-neutral-300 transition-colors duration-150"
+          >
+            Cómo funciona
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios principales -->
+  <section class="py-16 bg-neutral-50" id="como-funciona" aria-labelledby="tipos-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 id="tipos-heading" class="font-display text-3xl font-bold text-neutral-900 mb-3">¿Qué puedes hacer en Business Dollar?</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <!-- Comprar dólares -->
+        <div id="comprar" class="bg-white rounded-xl p-8 border-2 border-primary-100 hover:border-primary-300 transition-colors">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl" aria-hidden="true">🇵🇪 → 🇺🇸</span>
+            <h3 class="font-display text-xl font-bold text-neutral-900">Comprar dólares</h3>
+          </div>
+          <p class="text-neutral-600 mb-4 leading-relaxed">
+            Convierte tus soles a dólares al tipo de cambio de <strong class="text-primary-600">compra</strong>. Ideal para ahorrar en dólares, pagar servicios internacionales o importar.
+          </p>
+          <ul class="space-y-2 text-sm text-neutral-600 mb-6">
+            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Tipo de cambio de compra competitivo</li>
+            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Sin comisiones de plataforma</li>
+            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Acreditación el mismo día hábil</li>
+          </ul>
+          <a href="https://app.business-dollar.pe/register" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 hover:text-primary-700">
+            Comprar dólares ahora →
+          </a>
+        </div>
+
+        <!-- Vender dólares -->
+        <div id="vender" class="bg-white rounded-xl p-8 border-2 border-neutral-200 hover:border-neutral-300 transition-colors">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl" aria-hidden="true">🇺🇸 → 🇵🇪</span>
+            <h3 class="font-display text-xl font-bold text-neutral-900">Vender dólares</h3>
+          </div>
+          <p class="text-neutral-600 mb-4 leading-relaxed">
+            Convierte tus dólares a soles al tipo de cambio de <strong class="text-red-600">venta</strong>. Perfecto para quienes reciben pagos en dólares, freelancers o exportadores.
+          </p>
+          <ul class="space-y-2 text-sm text-neutral-600 mb-6">
+            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Tipo de cambio de venta competitivo</li>
+            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Compatible con cuentas en dólares</li>
+            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Proceso 100% digital</li>
+          </ul>
+          <a href="https://app.business-dollar.pe/register" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 hover:text-primary-700">
+            Vender dólares ahora →
+          </a>
+        </div>
+      </div>
+
+      <!-- Calculadora placeholder -->
+      <div id="calculadora" class="mt-8 max-w-4xl mx-auto bg-white rounded-xl border border-neutral-200 p-6 text-center">
+        <p class="text-sm font-semibold text-neutral-700 mb-1">Calculadora de tipo de cambio</p>
+        <p class="text-xs text-neutral-400 mb-4">Próximamente — disponible al iniciar sesión en la app</p>
+        <a href="https://app.business-dollar.pe/register" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors duration-150">
+          Usar calculadora
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabla comparativa -->
+  <section class="py-16 bg-white" aria-labelledby="comparacion-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 id="comparacion-heading" class="font-display text-3xl font-bold text-neutral-900 mb-3">
+          Business Dollar vs Bancos vs Casas de cambio
+        </h2>
+        <p class="text-neutral-600 max-w-xl mx-auto">
+          Compara y elige la mejor opción para tus operaciones de cambio de divisas.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-neutral-200 shadow-sm">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-neutral-50">
+              <th scope="col" class="px-5 py-4 text-left font-semibold text-neutral-700 border-b border-neutral-200">Característica</th>
+              <th scope="col" class="px-5 py-4 text-center font-semibold text-primary-700 bg-primary-50 border-b border-primary-100">
+                <div class="flex items-center justify-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-primary-500"></span>
+                  Business Dollar
+                </div>
+              </th>
+              <th scope="col" class="px-5 py-4 text-center font-semibold text-neutral-600 border-b border-neutral-200">Bancos</th>
+              <th scope="col" class="px-5 py-4 text-center font-semibold text-neutral-600 border-b border-neutral-200">Casas físicas</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-neutral-100 bg-white">
+            {comparisonRows.map((row, i) => (
+              <tr class={i % 2 === 0 ? "" : "bg-neutral-50/40"}>
+                <td class="px-5 py-3.5 font-medium text-neutral-700">{row.feature}</td>
+                <td class="px-5 py-3.5 text-center text-primary-700 font-medium bg-primary-50/30">{row.bd}</td>
+                <td class="px-5 py-3.5 text-center text-neutral-600">{row.banks}</td>
+                <td class="px-5 py-3.5 text-center text-neutral-600">{row.casas}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-neutral-400 mt-3 text-center">
+        Comparación aproximada basada en condiciones generales del mercado. Los tipos de cambio y condiciones pueden variar.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 bg-neutral-50" aria-labelledby="faq-servicios-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="faq-servicios-heading" class="font-display text-2xl font-bold text-neutral-900 mb-8 text-center">Preguntas frecuentes sobre nuestros servicios</h2>
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="group bg-white rounded-xl border border-neutral-200 overflow-hidden">
+            <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-neutral-900 hover:text-primary-600 transition-colors list-none">
+              {faq.q}
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 transition-transform duration-200 group-open:rotate-180" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="px-6 pb-5 text-sm text-neutral-600 leading-relaxed border-t border-neutral-100">
+              <p class="pt-4">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+      <div class="mt-6 text-center">
+        <a href="/preguntas-frecuentes" class="text-sm font-semibold text-primary-600 hover:text-primary-700">
+          Ver todas las preguntas frecuentes →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-primary-600" aria-labelledby="cta-servicios-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 id="cta-servicios-heading" class="font-display text-2xl md:text-3xl font-bold text-white mb-4">
+        Empieza a cambiar dólares hoy
+      </h2>
+      <p class="text-primary-100 mb-7 leading-relaxed">
+        Regístrate en menos de 5 minutos y realiza tu primera operación con el mejor tipo de cambio del mercado.
+      </p>
+      <a
+        href="https://app.business-dollar.pe/register"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 bg-white text-primary-700 font-bold px-8 py-4 rounded-xl hover:bg-primary-50 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      >
+        Abrir cuenta gratis
+      </a>
+    </div>
+  </section>
+</PageLayout>

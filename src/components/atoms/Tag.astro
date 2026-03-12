@@ -1,0 +1,37 @@
+---
+/**
+ * Tag.astro
+ * Etiqueta para categorías y tags del blog.
+ * Referencia: docs/patterns/design-system.md → "Badge / Tag"
+ */
+
+interface Props {
+  href?: string;
+  class?: string;
+}
+
+const { href, class: className = "" } = Astro.props;
+
+const baseClasses =
+  "inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-neutral-100 text-neutral-600 transition-colors duration-150";
+
+const interactiveClasses = href
+  ? "hover:bg-primary-50 hover:text-primary-700 cursor-pointer"
+  : "";
+
+const classes = [baseClasses, interactiveClasses, className]
+  .filter(Boolean)
+  .join(" ");
+---
+
+{
+  href ? (
+    <a href={href} class={classes}>
+      <slot />
+    </a>
+  ) : (
+    <span class={classes}>
+      <slot />
+    </span>
+  )
+}

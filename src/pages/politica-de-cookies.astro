@@ -1,0 +1,173 @@
+---
+/**
+ * politica-de-cookies.astro
+ * Política de cookies y tecnologías similares.
+ * Cumple con requisitos de transparencia para usuarios peruanos y UE.
+ * Schema: WebPage.
+ * Referencia: docs/context/project-roadmap.md → Fase 2.9
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+import { company } from "../data/company";
+
+const today = new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" });
+
+const schema = {
+  "@type": "WebPage",
+  name: "Política de Cookies — Business Dollar",
+  description: "Política de cookies de Business Dollar: tipos de cookies que usamos, para qué sirven y cómo configurarlas.",
+  url: "https://business-dollar.pe/politica-de-cookies",
+  dateModified: new Date().toISOString().split("T")[0],
+};
+
+const cookieTypes = [
+  {
+    name: "Cookies estrictamente necesarias",
+    badge: "Siempre activas",
+    badgeColor: "bg-green-100 text-green-700",
+    description: "Son indispensables para el funcionamiento de la Plataforma. Sin ellas, no podrías iniciar sesión ni realizar operaciones.",
+    examples: [
+      { name: "session_id", purpose: "Mantiene tu sesión activa mientras navegas", duration: "Sesión" },
+      { name: "csrf_token", purpose: "Protege contra ataques de falsificación de solicitudes", duration: "Sesión" },
+      { name: "auth_token", purpose: "Autenticación segura en la app", duration: "30 días" },
+    ],
+  },
+  {
+    name: "Cookies funcionales",
+    badge: "Opcionales",
+    badgeColor: "bg-blue-100 text-blue-700",
+    description: "Permiten recordar tus preferencias (idioma, divisa por defecto, configuración de la cuenta) para ofrecerte una mejor experiencia.",
+    examples: [
+      { name: "user_prefs", purpose: "Guarda preferencias de la interfaz (tema, divisa preferida)", duration: "1 año" },
+      { name: "currency_pref", purpose: "Recuerda la última divisa seleccionada", duration: "90 días" },
+    ],
+  },
+  {
+    name: "Cookies analíticas",
+    badge: "Opcionales",
+    badgeColor: "bg-blue-100 text-blue-700",
+    description: "Nos ayudan a entender cómo los usuarios interactúan con la Plataforma para mejorar su rendimiento y contenido. Los datos son agregados y anonimizados.",
+    examples: [
+      { name: "_ga, _ga_*", purpose: "Google Analytics — análisis de uso y comportamiento", duration: "2 años" },
+      { name: "_gid", purpose: "Google Analytics — distingue sesiones de usuario", duration: "24 horas" },
+    ],
+  },
+  {
+    name: "Cookies de marketing",
+    badge: "Opcionales",
+    badgeColor: "bg-blue-100 text-blue-700",
+    description: "Se usan para mostrar publicidad relevante y medir la eficacia de campañas. Solo se activan con tu consentimiento.",
+    examples: [
+      { name: "_fbp", purpose: "Facebook Pixel — medición de conversiones en campañas", duration: "90 días" },
+      { name: "gtm_*", purpose: "Google Tag Manager — gestión de etiquetas de marketing", duration: "Sesión" },
+    ],
+  },
+];
+---
+
+<PageLayout
+  title="Política de Cookies — Business Dollar"
+  description="Conoce qué cookies usa Business Dollar, para qué sirven y cómo configurarlas o desactivarlas desde tu navegador."
+  schema={schema}
+  breadcrumbs={[{ label: "Política de cookies", href: "/politica-de-cookies" }]}
+>
+  <section class="py-16 bg-white" aria-labelledby="cookies-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="mb-10 pb-6 border-b border-neutral-200">
+        <h1 id="cookies-heading" class="font-display text-4xl font-bold text-neutral-900 mb-3">
+          Política de Cookies
+        </h1>
+        <p class="text-neutral-500 text-sm">
+          Última actualización: {today} · {company.legalName}
+        </p>
+      </div>
+
+      <!-- Intro -->
+      <div class="prose prose-neutral max-w-none text-sm text-neutral-700 leading-relaxed mb-10 space-y-4">
+        <p>
+          Business Dollar ({company.legalName}) usa cookies y tecnologías similares en su sitio web (<a href={company.url} class="text-accent-600 hover:underline">{company.url}</a>) y en su aplicación (<a href={company.appUrl} class="text-accent-600 hover:underline">{company.appUrl}</a>). Esta política te explica qué son las cookies, cuáles usamos y cómo puedes gestionarlas.
+        </p>
+        <p>
+          Una <strong>cookie</strong> es un pequeño archivo de texto que se almacena en tu dispositivo cuando visitas un sitio web. Las cookies permiten al sitio recordar tus acciones y preferencias durante un tiempo, para que no tengas que volver a configurarlas cada vez que lo visitas.
+        </p>
+      </div>
+
+      <!-- Tabla por tipo de cookie -->
+      <div class="space-y-8">
+        {cookieTypes.map((ct) => (
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <h2 class="font-display text-lg font-bold text-neutral-900">{ct.name}</h2>
+              <span class={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${ct.badgeColor}`}>{ct.badge}</span>
+            </div>
+            <p class="text-sm text-neutral-600 mb-4">{ct.description}</p>
+            <div class="overflow-x-auto rounded-xl border border-neutral-200">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="bg-neutral-50 border-b border-neutral-200">
+                    <th class="text-left px-4 py-2.5 font-semibold text-neutral-700 w-1/3">Nombre</th>
+                    <th class="text-left px-4 py-2.5 font-semibold text-neutral-700">Propósito</th>
+                    <th class="text-left px-4 py-2.5 font-semibold text-neutral-700 w-28">Duración</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ct.examples.map((ex, idx) => (
+                    <tr class={idx % 2 === 0 ? "bg-white" : "bg-neutral-50/50"}>
+                      <td class="px-4 py-2.5 font-mono text-xs text-neutral-800 align-top">{ex.name}</td>
+                      <td class="px-4 py-2.5 text-neutral-600 align-top">{ex.purpose}</td>
+                      <td class="px-4 py-2.5 text-neutral-500 align-top">{ex.duration}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Cómo gestionar -->
+      <div class="mt-12" id="gestion">
+        <h2 class="font-display text-xl font-bold text-neutral-900 mb-4">Cómo gestionar tus cookies</h2>
+        <div class="space-y-4 text-sm text-neutral-700 leading-relaxed">
+          <p>
+            Puedes configurar o desactivar las cookies desde la configuración de tu navegador. Ten en cuenta que desactivar cookies estrictamente necesarias puede impedir el funcionamiento correcto de la Plataforma.
+          </p>
+          <ul class="space-y-2 pl-4">
+            {[
+              { browser: "Google Chrome", url: "https://support.google.com/chrome/answer/95647" },
+              { browser: "Mozilla Firefox", url: "https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrean-preferencias" },
+              { browser: "Safari", url: "https://support.apple.com/es-es/guide/safari/sfri11471/mac" },
+              { browser: "Microsoft Edge", url: "https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" },
+            ].map((b) => (
+              <li class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                <a href={b.url} target="_blank" rel="noopener noreferrer" class="text-accent-600 hover:underline">{b.browser}</a>
+              </li>
+            ))}
+          </ul>
+          <p>
+            Para revocar el consentimiento de cookies no esenciales, también puedes usar el panel de configuración de cookies en la parte inferior de esta página.
+          </p>
+        </div>
+      </div>
+
+      <!-- Contacto -->
+      <div class="mt-10 p-5 bg-neutral-50 rounded-xl border border-neutral-200 text-sm">
+        <p class="font-semibold text-neutral-700 mb-1">¿Tienes preguntas sobre nuestro uso de cookies?</p>
+        <p class="text-neutral-600">
+          Contáctanos en <a href={`mailto:${company.email}`} class="text-accent-600 hover:underline">{company.email}</a>.
+        </p>
+      </div>
+
+      <div class="mt-10 pt-8 border-t border-neutral-200 text-xs text-neutral-500 space-y-2">
+        <p>© {new Date().getFullYear()} {company.legalName}. Todos los derechos reservados.</p>
+        <p>
+          Ver también:
+          <a href="/terminos-y-condiciones" class="text-accent-600 hover:underline ml-1">Términos y Condiciones</a> ·
+          <a href="/politica-de-privacidad" class="text-accent-600 hover:underline ml-1">Política de Privacidad</a> ·
+          <a href="/libro-de-reclamaciones" class="text-accent-600 hover:underline ml-1">Libro de Reclamaciones</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</PageLayout>

@@ -1,0 +1,335 @@
+---
+/**
+ * BlogLayout.astro
+ * Layout para artículos de blog. Extiende BaseLayout con:
+ * - Navbar + Breadcrumbs
+ * - Header del artículo (título, autor, fecha, lectura estimada, categoría)
+ * - Sidebar (tabla de contenidos — preparada, implementar en Fase 3)
+ * - Author bio al final
+ * - CTA de conversión
+ * - Footer
+ * Inyecta BlogPosting / Article Schema dinámicamente desde props.
+ * Referencia: docs/patterns/architecture.md → Layouts → BlogLayout
+ * Referencia: docs/patterns/seo-rules.md → "Checklist para Blog Posts"
+ */
+
+import BaseLayout from "./BaseLayout.astro";
+import Navbar from "../components/organisms/Navbar.astro";
+import Footer from "../components/organisms/Footer.astro";
+import Breadcrumbs from "../components/seo/Breadcrumbs.astro";
+
+interface AuthorData {
+  name: string;
+  role?: string;
+  bio?: string;
+  avatar?: string;
+  linkedin?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  noindex?: boolean;
+  /** Datos del artículo para el header y Schema.org */
+  publishDate: Date;
+  updatedDate?: Date;
+  author: AuthorData;
+  category: string;
+  tags?: string[];
+  readingTime?: number; // minutos estimados
+  /** Items de breadcrumb extra (después de "Inicio > Blog") */
+  breadcrumbs?: Array<{ label: string; href: string }>;
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  canonicalUrl,
+  noindex = false,
+  publishDate,
+  updatedDate,
+  author,
+  category,
+  tags = [],
+  readingTime,
+  breadcrumbs = [],
+} = Astro.props;
+
+// Schema BlogPosting / Article para este artículo
+const articleSchema = {
+  "@type": "BlogPosting",
+  headline: title,
+  description,
+  ...(ogImage ? { image: ogImage } : {}),
+  datePublished: publishDate.toISOString(),
+  ...(updatedDate ? { dateModified: updatedDate.toISOString() } : {}),
+  author: {
+    "@type": "Person",
+    name: author.name,
+    ...(author.linkedin ? { url: author.linkedin } : {}),
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Business Dollar",
+    url: "https://business-dollar.pe",
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": canonicalUrl ?? Astro.url.href,
+  },
+};
+
+// Breadcrumbs completos: Inicio > Blog > [categoría?] > título
+const fullBreadcrumbs = [
+  { label: "Blog", href: "/blog" },
+  ...breadcrumbs,
+];
+
+// Formatear fechas en español (Perú)
+const dateFormatter = new Intl.DateTimeFormat("es-PE", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const categoryLabels: Record<string, string> = {
+  "tipo-de-cambio": "Tipo de Cambio",
+  guias: "Guías",
+  seguridad: "Seguridad",
+  finanzas: "Finanzas Personales",
+  noticias: "Noticias",
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  canonicalUrl={canonicalUrl}
+  noindex={noindex}
+  schema={articleSchema}
+>
+  <Navbar />
+
+  <div class="border-b border-neutral-200 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Breadcrumbs items={fullBreadcrumbs} />
+    </div>
+  </div>
+
+  <main id="main-content" tabindex="-1">
+    <!-- Article header -->
+    <header class="bg-white border-b border-neutral-100">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+        <!-- Category badge -->
+        <div class="mb-4">
+          <a
+            href={`/blog/categoria/${category}`}
+            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 hover:bg-primary-100 transition-colors duration-150"
+          >
+            {categoryLabels[category] ?? category}
+          </a>
+        </div>
+
+        <!-- Title -->
+        <h1 class="font-display text-3xl md:text-4xl font-bold text-neutral-900 leading-tight mb-4">
+          {title}
+        </h1>
+
+        <!-- Description -->
+        <p class="text-lg text-neutral-600 leading-relaxed mb-6">
+          {description}
+        </p>
+
+        <!-- Meta row -->
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-neutral-500 border-t border-neutral-100 pt-5">
+          <!-- Author -->
+          <div class="flex items-center gap-2">
+            {
+              author.avatar ? (
+                <img
+                  src={author.avatar}
+                  alt={`Foto de ${author.name}`}
+                  width="28"
+                  height="28"
+                  class="w-7 h-7 rounded-full object-cover"
+                  loading="eager"
+                />
+              ) : (
+                <span
+                  class="flex items-center justify-center w-7 h-7 rounded-full bg-primary-100 text-primary-700 text-xs font-bold"
+                  aria-hidden="true"
+                >
+                  {author.name.charAt(0)}
+                </span>
+              )
+            }
+            <span class="font-medium text-neutral-700">{author.name}</span>
+            {author.role && <span class="text-neutral-400">·</span>}
+            {author.role && <span class="text-neutral-500">{author.role}</span>}
+          </div>
+
+          <span class="text-neutral-300 hidden sm:inline">|</span>
+
+          <!-- Publish date -->
+          <time datetime={publishDate.toISOString()}>
+            {dateFormatter.format(publishDate)}
+          </time>
+
+          <!-- Updated date if different -->
+          {
+            updatedDate && updatedDate.getTime() !== publishDate.getTime() && (
+              <>
+                <span class="text-neutral-300 hidden sm:inline">|</span>
+                <span>
+                  Actualizado: <time datetime={updatedDate.toISOString()}>{dateFormatter.format(updatedDate)}</time>
+                </span>
+              </>
+            )
+          }
+
+          <!-- Reading time -->
+          {
+            readingTime && (
+              <>
+                <span class="text-neutral-300 hidden sm:inline">|</span>
+                <span>{readingTime} min de lectura</span>
+              </>
+            )
+          }
+        </div>
+      </div>
+    </header>
+
+    <!-- Article body -->
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <!-- YMYL disclaimer para contenido financiero -->
+      <div class="mb-8 flex gap-3 rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-xs text-neutral-500">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="shrink-0 text-neutral-400 mt-0.5"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </svg>
+        <span>
+          El contenido de este artículo es de carácter informativo y educativo. No constituye asesoría financiera de
+          inversión. Business Dollar es una casa de cambio regulada por la SBS. El tipo de cambio varía constantemente.
+        </span>
+      </div>
+
+      <!-- Contenido del artículo -->
+      <article class="prose prose-neutral max-w-none prose-headings:font-display prose-a:text-accent-600 prose-a:no-underline hover:prose-a:underline">
+        <slot />
+      </article>
+
+      <!-- Tags -->
+      {
+        tags.length > 0 && (
+          <div class="mt-10 pt-6 border-t border-neutral-200">
+            <p class="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-3">
+              Etiquetas
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <a
+                  href={`/blog/etiqueta/${tag}`}
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-neutral-100 text-neutral-600 hover:bg-neutral-200 hover:text-neutral-800 transition-colors duration-150"
+                >
+                  #{tag}
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      <!-- Author bio -->
+      <div class="mt-10 rounded-xl border border-neutral-200 bg-white p-6">
+        <p class="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4">
+          Sobre el autor
+        </p>
+        <div class="flex gap-4">
+          {
+            author.avatar ? (
+              <img
+                src={author.avatar}
+                alt={`Foto de ${author.name}`}
+                width="56"
+                height="56"
+                class="w-14 h-14 rounded-full object-cover shrink-0"
+                loading="lazy"
+              />
+            ) : (
+              <span
+                class="flex items-center justify-center w-14 h-14 rounded-full bg-primary-100 text-primary-700 text-xl font-bold shrink-0"
+                aria-hidden="true"
+              >
+                {author.name.charAt(0)}
+              </span>
+            )
+          }
+          <div>
+            <p class="font-semibold text-neutral-900">{author.name}</p>
+            {author.role && <p class="text-sm text-neutral-500 mb-2">{author.role}</p>}
+            {author.bio && <p class="text-sm text-neutral-600 leading-relaxed">{author.bio}</p>}
+            {
+              author.linkedin && (
+                <a
+                  href={author.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 mt-3 text-xs font-medium text-accent-600 hover:text-accent-700"
+                >
+                  Ver perfil en LinkedIn
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                  </svg>
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA de conversión -->
+      <div class="mt-10 rounded-xl bg-primary-600 px-6 py-8 text-center">
+        <p class="font-display text-xl font-bold text-white mb-2">
+          ¿Listo para cambiar dólares al mejor tipo de cambio?
+        </p>
+        <p class="text-primary-100 text-sm mb-6">
+          Regístrate gratis en Business Dollar y realiza tu primera operación en minutos.
+        </p>
+        <a
+          href="https://app.business-dollar.pe/register"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-lg hover:bg-primary-50 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
+        >
+          Abrir cuenta gratis
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

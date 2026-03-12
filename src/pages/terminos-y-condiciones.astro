@@ -1,0 +1,149 @@
+---
+/**
+ * terminos-y-condiciones.astro
+ * Términos y condiciones del servicio Business Dollar.
+ * Página legal requerida para YMYL/EEAT. Schema: WebPage.
+ * Referencia: docs/context/project-roadmap.md → Fase 2.7
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+import { company } from "../data/company";
+
+const today = new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" });
+
+const schema = {
+  "@type": "WebPage",
+  name: "Términos y Condiciones — Business Dollar",
+  description: "Términos y condiciones de uso de la plataforma Business Dollar para cambio de divisas online en Perú.",
+  url: "https://business-dollar.pe/terminos-y-condiciones",
+  dateModified: new Date().toISOString().split("T")[0],
+  about: {
+    "@type": "Organization",
+    name: company.name,
+    url: company.url,
+  },
+};
+
+const sections = [
+  {
+    id: "objeto",
+    title: "1. Objeto",
+    content: `Los presentes Términos y Condiciones (en adelante, "Términos") regulan el acceso y uso de los servicios ofrecidos por ${company.legalName} (RUC: ${company.ruc}), con domicilio en ${company.address}, a través de la plataforma digital accesible en ${company.url} y ${company.appUrl} (en adelante, "la Plataforma" o "Business Dollar").\n\nAl registrarte o utilizar los servicios de Business Dollar, aceptas íntegramente estos Términos. Si no estás de acuerdo con alguna parte de estos Términos, debes abstenerte de usar la Plataforma.`,
+  },
+  {
+    id: "elegibilidad",
+    title: "2. Elegibilidad y registro",
+    content: `Para utilizar los servicios de Business Dollar, debes:\n\n• Ser persona natural mayor de 18 años con plena capacidad legal, o persona jurídica debidamente constituida en el Perú o en el extranjero.\n• Proporcionar información verídica, exacta y completa durante el proceso de registro.\n• Completar satisfactoriamente el proceso de verificación de identidad (KYC) requerido por la normativa de la Superintendencia de Banca, Seguros y AFP (SBS).\n• No estar incluido en listas de personas políticamente expuestas (PEP) o en listas de sanciones internacionales sin haber declarado dicha condición.\n\nBusiness Dollar se reserva el derecho de rechazar o suspender el registro de cualquier usuario que no cumpla con estos requisitos o cuya información resulte ser falsa o incompleta.`,
+  },
+  {
+    id: "servicios",
+    title: "3. Descripción de los servicios",
+    content: `Business Dollar ofrece los siguientes servicios a través de su Plataforma:\n\n• Compra y venta de dólares estadounidenses (USD) a cambio de soles peruanos (PEN) y viceversa.\n• Tipo de cambio competitivo publicado en tiempo real en la Plataforma.\n• Procesamiento de transferencias bancarias hacia y desde cuentas en los bancos asociados.\n\nBusiness Dollar no ofrece servicios de custodia de fondos a largo plazo, asesoría financiera, intermediación de valores, ni ningún otro servicio financiero distinto a los expresamente indicados.`,
+  },
+  {
+    id: "tipo-cambio",
+    title: "4. Tipo de cambio y tarifas",
+    content: `El tipo de cambio aplicable a cada operación es el vigente al momento de confirmar la operación, el cual queda fijo por un período de 15 minutos. Transcurrido dicho período sin que el usuario complete la transferencia, Business Dollar podrá actualizar el tipo de cambio.\n\nBusiness Dollar no cobra comisiones adicionales al tipo de cambio mostrado. La diferencia entre el precio de compra y el precio de venta (spread) constituye la retribución por el servicio prestado.\n\nLos tipos de cambio publicados en la Plataforma son referenciales para fines informativos y solo son vinculantes cuando el usuario confirma una operación dentro del plazo establecido.`,
+  },
+  {
+    id: "operaciones",
+    title: "5. Proceso de operaciones",
+    content: `Para realizar una operación, el usuario debe:\n\n1. Iniciar sesión en su cuenta verificada.\n2. Ingresar el monto y la divisa de origen.\n3. Seleccionar la cuenta de origen y la cuenta de destino.\n4. Confirmar la operación y el tipo de cambio mostrado.\n5. Realizar la transferencia bancaria dentro del plazo de 15 minutos.\n\nBusiness Dollar procesará la operación una vez confirmada la recepción de los fondos. El tiempo de acreditación depende del banco de destino y del horario de atención bancaria. Business Dollar no es responsable por demoras ocasionadas por los sistemas bancarios de terceros.\n\nEl monto mínimo por operación es de USD 100 o su equivalente en soles.`,
+  },
+  {
+    id: "obligaciones",
+    title: "6. Obligaciones del usuario",
+    content: `El usuario se compromete a:\n\n• Usar la Plataforma exclusivamente para operaciones de cambio de divisas lícitas.\n• No utilizar la Plataforma para el lavado de activos, financiamiento del terrorismo u otras actividades ilícitas.\n• Mantener la confidencialidad de sus credenciales de acceso.\n• Notificar de inmediato a Business Dollar ante cualquier acceso no autorizado a su cuenta.\n• Proporcionar documentación veraz ante requerimientos de Business Dollar o de autoridades competentes.\n• No intentar acceder a sistemas o datos de otros usuarios.\n• No usar la Plataforma con medios automatizados (bots, scripts) sin autorización expresa.`,
+  },
+  {
+    id: "privacidad",
+    title: "7. Privacidad y protección de datos",
+    content: `El tratamiento de los datos personales del usuario se rige por la Política de Privacidad de Business Dollar, disponible en ${company.url}/politica-de-privacidad, y por la Ley N.° 29733 de Protección de Datos Personales del Perú y su reglamento.\n\nBusiness Dollar recopila y procesa datos personales únicamente para los fines descritos en dicha política, incluyendo el cumplimiento de obligaciones legales y regulatorias (KYC/AML).`,
+  },
+  {
+    id: "responsabilidad",
+    title: "8. Limitación de responsabilidad",
+    content: `Business Dollar no será responsable por:\n\n• Daños o pérdidas derivadas de errores del usuario al ingresar datos de cuentas bancarias de destino.\n• Demoras, interrupciones o errores del sistema financiero o bancario de terceros.\n• Fluctuaciones del tipo de cambio posteriores a la confirmación de la operación.\n• Pérdidas causadas por acceso no autorizado a la cuenta del usuario cuando este no haya tomado las medidas de seguridad razonables.\n• Interrupciones del servicio por mantenimiento programado o por causas de fuerza mayor.\n\nEn ningún caso la responsabilidad de Business Dollar superará el monto de la operación que dio origen al reclamo.`,
+  },
+  {
+    id: "plaft",
+    title: "9. Prevención de lavado de activos (PLAFT)",
+    content: `Business Dollar cumple con el Sistema de Prevención del Lavado de Activos y del Financiamiento del Terrorismo (PLAFT) conforme a las disposiciones de la SBS. En virtud de ello:\n\n• Requeriremos documentación adicional para operaciones que superen los umbrales establecidos por la normativa vigente.\n• Reportaremos a las autoridades competentes las operaciones sospechosas o inusuales.\n• Podremos bloquear o cancelar operaciones y cuentas ante indicios de actividad ilícita, sin necesidad de notificación previa.\n• El usuario autoriza a Business Dollar a reportar a la Unidad de Inteligencia Financiera (UIF) las operaciones que así lo requieran.`,
+  },
+  {
+    id: "modificaciones",
+    title: "10. Modificaciones",
+    content: `Business Dollar se reserva el derecho de modificar estos Términos en cualquier momento. Las modificaciones serán notificadas al usuario con un mínimo de 15 días de anticipación a través de la Plataforma o por correo electrónico. El uso continuado de la Plataforma tras la notificación implica la aceptación de los nuevos Términos.`,
+  },
+  {
+    id: "jurisdiccion",
+    title: "11. Ley aplicable y jurisdicción",
+    content: `Estos Términos se rigen por las leyes de la República del Perú. Cualquier controversia derivada de o relacionada con estos Términos se someterá a la jurisdicción de los juzgados y tribunales de la ciudad de Lima, Perú, con renuncia expresa a cualquier otro fuero que pudiera corresponder.`,
+  },
+  {
+    id: "contacto",
+    title: "12. Contacto",
+    content: `Para consultas sobre estos Términos, puedes contactarnos en:\n\n${company.legalName}\nRUC: ${company.ruc}\nCorreo: ${company.email}\nTeléfono: ${company.phone}\nDirección: ${company.address}`,
+  },
+];
+---
+
+<PageLayout
+  title="Términos y Condiciones — Business Dollar"
+  description="Términos y condiciones de uso de Business Dollar, plataforma de cambio de dólares online regulada por la SBS del Perú. Última actualización: 2025."
+  schema={schema}
+  breadcrumbs={[{ label: "Términos y condiciones", href: "/terminos-y-condiciones" }]}
+>
+  <section class="py-16 bg-white" aria-labelledby="tyc-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Header -->
+      <div class="mb-10 pb-6 border-b border-neutral-200">
+        <h1 id="tyc-heading" class="font-display text-4xl font-bold text-neutral-900 mb-3">
+          Términos y Condiciones
+        </h1>
+        <p class="text-neutral-500 text-sm">
+          Última actualización: {today} · {company.legalName}
+        </p>
+      </div>
+
+      <!-- Intro -->
+      <div class="prose prose-neutral max-w-none mb-8 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
+        <strong>Aviso legal:</strong> Este documento es vinculante. Lea atentamente antes de usar la plataforma. Al crear una cuenta o realizar operaciones en Business Dollar, usted acepta los presentes Términos y Condiciones en su totalidad.
+      </div>
+
+      <!-- Índice -->
+      <nav class="mb-10 bg-neutral-50 rounded-xl border border-neutral-200 p-5" aria-label="Índice de secciones">
+        <p class="text-sm font-semibold text-neutral-700 mb-3">Índice</p>
+        <ol class="space-y-1 text-sm">
+          {sections.map((s) => (
+            <li>
+              <a href={`#${s.id}`} class="text-accent-600 hover:underline">{s.title}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <!-- Secciones -->
+      <div class="space-y-10">
+        {sections.map((s) => (
+          <div id={s.id}>
+            <h2 class="font-display text-xl font-bold text-neutral-900 mb-4">{s.title}</h2>
+            <div class="text-sm text-neutral-700 leading-relaxed whitespace-pre-line">{s.content}</div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Footer legal -->
+      <div class="mt-12 pt-8 border-t border-neutral-200 text-xs text-neutral-500 space-y-2">
+        <p>© {new Date().getFullYear()} {company.legalName}. Todos los derechos reservados.</p>
+        <p>Regulado por la Superintendencia de Banca, Seguros y AFP (SBS), Registro N.° {company.sbsRegistro}.</p>
+        <p>
+          Ver también:
+          <a href="/politica-de-privacidad" class="text-accent-600 hover:underline ml-1">Política de Privacidad</a> ·
+          <a href="/politica-de-cookies" class="text-accent-600 hover:underline ml-1">Política de Cookies</a> ·
+          <a href="/libro-de-reclamaciones" class="text-accent-600 hover:underline ml-1">Libro de Reclamaciones</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</PageLayout>

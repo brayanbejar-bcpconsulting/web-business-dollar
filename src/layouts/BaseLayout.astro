@@ -1,0 +1,104 @@
+---
+/**
+ * BaseLayout.astro
+ * Layout base de todos los layouts del sitio. Gestiona:
+ * - <head> completo: meta, SEO, schemas, fuentes
+ * - Google Tag Manager (noscript en body)
+ * - Importación de estilos globales
+ * - Skip-to-content link para accesibilidad
+ * Referencia: docs/patterns/architecture.md → Layouts → BaseLayout
+ */
+
+import HeadMeta from "../components/seo/HeadMeta.astro";
+import SchemaOrg from "../components/seo/SchemaOrg.astro";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  noindex?: boolean;
+  /** Schema.org JSON-LD adicional específico de la página (además de Organization + WebSite globales) */
+  schema?: object;
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  canonicalUrl,
+  noindex = false,
+  schema,
+} = Astro.props;
+
+// GTM_ID — reemplazar con el ID real cuando esté disponible
+const GTM_ID = "GTM-XXXXXXX"; // TODO: reemplazar con ID real
+---
+
+<!doctype html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Google Tag Manager -->
+    <script define:vars={{ GTM_ID }}>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", GTM_ID);
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google Fonts — preconnect para reducir latencia -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- SEO meta tags -->
+    <HeadMeta
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      canonicalUrl={canonicalUrl}
+      noindex={noindex}
+    />
+
+    <!-- Schema.org global (Organization + WebSite) + schema de página si aplica -->
+    <SchemaOrg schema={schema} />
+
+    <!-- Sitemap discovery -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+  </head>
+  <body class="bg-neutral-50 text-neutral-900 antialiased">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Skip to main content — accesibilidad teclado -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-md focus:font-medium focus:shadow-lg"
+    >
+      Saltar al contenido principal
+    </a>
+
+    <slot />
+  </body>
+</html>

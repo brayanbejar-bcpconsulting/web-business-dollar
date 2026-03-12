@@ -1,0 +1,289 @@
+---
+/**
+ * libro-de-reclamaciones.astro
+ * Libro de Reclamaciones virtual — obligatorio por Ley N.° 29571
+ * (Código de Protección y Defensa del Consumidor) del Perú.
+ * Schema: WebPage + ContactPage.
+ * Referencia: docs/context/project-roadmap.md → Fase 2.10
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+import { company } from "../data/company";
+
+const today = new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" });
+
+const schema = {
+  "@type": "WebPage",
+  name: "Libro de Reclamaciones — Business Dollar",
+  description: "Libro de Reclamaciones virtual de Business Dollar conforme a la Ley N.° 29571 del Perú. Registra tu queja o reclamo de forma rápida y sencilla.",
+  url: "https://business-dollar.pe/libro-de-reclamaciones",
+};
+---
+
+<PageLayout
+  title="Libro de Reclamaciones — Business Dollar"
+  description="Registra tu queja o reclamo ante Business Dollar. Libro de Reclamaciones virtual conforme al Código de Protección al Consumidor (Ley N.° 29571) del Perú."
+  schema={schema}
+  breadcrumbs={[{ label: "Libro de reclamaciones", href: "/libro-de-reclamaciones" }]}
+>
+  <section class="py-16 bg-white" aria-labelledby="ldr-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Header con ícono oficial -->
+      <div class="mb-10 pb-6 border-b border-neutral-200">
+        <div class="flex items-center gap-4 mb-4">
+          <!-- Ícono Libro de Reclamaciones -->
+          <div class="w-14 h-14 rounded-xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center shrink-0" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div>
+            <h1 id="ldr-heading" class="font-display text-3xl md:text-4xl font-bold text-neutral-900">
+              Libro de Reclamaciones
+            </h1>
+            <p class="text-neutral-500 text-sm mt-0.5">{company.legalName} · RUC {company.ruc}</p>
+          </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+          <strong>Aviso legal:</strong> Conforme a la Ley N.° 29571 (Código de Protección y Defensa del Consumidor) y al Decreto Supremo N.° 011-2011-PCM, los proveedores de productos y servicios están obligados a contar con un Libro de Reclamaciones. El plazo máximo para nuestra respuesta es de <strong>30 días hábiles</strong>.
+        </div>
+      </div>
+
+      <!-- Diferencia queja vs reclamo -->
+      <div class="grid sm:grid-cols-2 gap-4 mb-10">
+        <div class="bg-orange-50 rounded-xl border border-orange-100 p-5">
+          <h2 class="font-semibold text-orange-900 mb-2 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Queja
+          </h2>
+          <p class="text-sm text-orange-800 leading-relaxed">
+            Malestar o descontento con la atención recibida o con algún aspecto del servicio, <strong>sin que exista un perjuicio económico directo</strong>.
+          </p>
+        </div>
+        <div class="bg-red-50 rounded-xl border border-red-100 p-5">
+          <h2 class="font-semibold text-red-900 mb-2 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Reclamo
+          </h2>
+          <p class="text-sm text-red-800 leading-relaxed">
+            Disconformidad relacionada con los productos o servicios ofrecidos, <strong>donde se ha producido o puede producirse un perjuicio económico</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div>
+        <h2 class="font-display text-xl font-bold text-neutral-900 mb-6">
+          Registra tu queja o reclamo
+        </h2>
+
+        <form
+          name="libro-reclamaciones"
+          method="POST"
+          action="/libro-de-reclamaciones/confirmacion"
+          class="space-y-6"
+          novalidate
+        >
+          <!-- Tipo -->
+          <fieldset>
+            <legend class="text-sm font-semibold text-neutral-700 mb-3">
+              Tipo de registro <span class="text-red-500" aria-hidden="true">*</span>
+            </legend>
+            <div class="flex gap-4">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="tipo" value="reclamo" required class="text-primary-600 focus:ring-primary-500" />
+                <span class="text-sm font-medium text-neutral-700">Reclamo</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="tipo" value="queja" class="text-primary-600 focus:ring-primary-500" />
+                <span class="text-sm font-medium text-neutral-700">Queja</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- Datos personales -->
+          <div>
+            <h3 class="text-sm font-semibold text-neutral-700 mb-3">Datos del reclamante</h3>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="lr-nombre" class="block text-xs font-semibold text-neutral-600 mb-1.5">
+                  Nombre completo <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="lr-nombre"
+                  name="nombre"
+                  required
+                  autocomplete="name"
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label for="lr-dni" class="block text-xs font-semibold text-neutral-600 mb-1.5">
+                  DNI / Pasaporte <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="lr-dni"
+                  name="documento"
+                  required
+                  maxlength="20"
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label for="lr-email" class="block text-xs font-semibold text-neutral-600 mb-1.5">
+                  Correo electrónico <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="lr-email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label for="lr-telefono" class="block text-xs font-semibold text-neutral-600 mb-1.5">
+                  Teléfono de contacto
+                </label>
+                <input
+                  type="tel"
+                  id="lr-telefono"
+                  name="telefono"
+                  autocomplete="tel"
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Detalle -->
+          <div>
+            <h3 class="text-sm font-semibold text-neutral-700 mb-3">Detalle del reclamo o queja</h3>
+            <div class="space-y-4">
+              <div>
+                <label for="lr-servicio" class="block text-xs font-semibold text-neutral-600 mb-1.5">
+                  Servicio involucrado <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <select
+                  id="lr-servicio"
+                  name="servicio"
+                  required
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  <option value="" disabled selected>Selecciona una opción</option>
+                  <option value="compra-dolares">Compra de dólares (USD → PEN)</option>
+                  <option value="venta-dolares">Venta de dólares (PEN → USD)</option>
+                  <option value="tipo-de-cambio">Tipo de cambio aplicado</option>
+                  <option value="demora-abono">Demora en acreditación</option>
+                  <option value="cuenta">Problema con la cuenta</option>
+                  <option value="atencion">Atención al cliente</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="lr-nro-operacion" class="block text-xs font-semibold text-neutral-600 mb-1.5">
+                  N.° de operación (si aplica)
+                </label>
+                <input
+                  type="text"
+                  id="lr-nro-operacion"
+                  name="nro_operacion"
+                  placeholder="Ej: OP-2025-00123"
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label for="lr-descripcion" class="block text-xs font-semibold text-neutral-600 mb-1.5">
+                  Descripción detallada <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <textarea
+                  id="lr-descripcion"
+                  name="descripcion"
+                  required
+                  rows="6"
+                  placeholder="Describe con el mayor detalle posible: qué ocurrió, cuándo, cuánto fue el monto involucrado, qué solución esperas..."
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                ></textarea>
+              </div>
+
+              <div>
+                <label for="lr-pedido" class="block text-xs font-semibold text-neutral-600 mb-1.5">
+                  ¿Qué solución solicitas? <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <textarea
+                  id="lr-pedido"
+                  name="pedido"
+                  required
+                  rows="3"
+                  placeholder="Indica qué esperas que Business Dollar haga para resolver tu situación..."
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Consentimiento -->
+          <div class="flex items-start gap-2.5">
+            <input
+              type="checkbox"
+              id="lr-consentimiento"
+              name="consentimiento"
+              required
+              class="mt-0.5 w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+            />
+            <label for="lr-consentimiento" class="text-xs text-neutral-600 leading-relaxed">
+              Declaro que la información proporcionada es veraz y que autorizo a Business Dollar a usar mis datos para atender este reclamo/queja conforme a su <a href="/politica-de-privacidad" class="text-accent-600 hover:underline">Política de Privacidad</a>.
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-primary-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-primary-700 active:bg-primary-800 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
+          >
+            Enviar reclamo / queja
+          </button>
+        </form>
+      </div>
+
+      <!-- Info adicional -->
+      <div class="mt-12 space-y-4">
+        <div class="bg-neutral-50 rounded-xl border border-neutral-200 p-5 text-sm">
+          <h3 class="font-semibold text-neutral-900 mb-2">¿Qué pasa después de enviar tu reclamo?</h3>
+          <ol class="space-y-2 text-neutral-600">
+            <li class="flex items-start gap-2.5">
+              <span class="flex items-center justify-center w-5 h-5 rounded-full bg-primary-100 text-primary-700 text-xs font-bold shrink-0 mt-0.5" aria-hidden="true">1</span>
+              Recibirás un correo de confirmación con el número de tu reclamo.
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex items-center justify-center w-5 h-5 rounded-full bg-primary-100 text-primary-700 text-xs font-bold shrink-0 mt-0.5" aria-hidden="true">2</span>
+              Un ejecutivo de Business Dollar revisará tu caso dentro de las 24 horas hábiles siguientes.
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="flex items-center justify-center w-5 h-5 rounded-full bg-primary-100 text-primary-700 text-xs font-bold shrink-0 mt-0.5" aria-hidden="true">3</span>
+              Te informaremos de la resolución en un plazo máximo de 30 días hábiles por el mismo correo registrado.
+            </li>
+          </ol>
+        </div>
+
+        <div class="bg-neutral-50 rounded-xl border border-neutral-200 p-5 text-sm text-neutral-600">
+          <p class="font-semibold text-neutral-800 mb-1">¿No estás satisfecho con nuestra respuesta?</p>
+          <p>
+            Si la solución ofrecida por Business Dollar no te satisface, puedes presentar tu reclamo ante el
+            <strong>INDECOPI</strong> (Instituto Nacional de Defensa de la Competencia y de la Protección de la Propiedad Intelectual)
+            en <a href="https://www.indecopi.gob.pe" target="_blank" rel="noopener noreferrer" class="text-accent-600 hover:underline">www.indecopi.gob.pe</a>
+            o ante la <strong>SBS</strong> en <a href="https://www.sbs.gob.pe" target="_blank" rel="noopener noreferrer" class="text-accent-600 hover:underline">www.sbs.gob.pe</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-10 pt-8 border-t border-neutral-200 text-xs text-neutral-500">
+        <p>{company.legalName} · RUC {company.ruc} · {company.address}</p>
+        <p class="mt-1">Libro de Reclamaciones conforme a la Ley N.° 29571 y D.S. N.° 011-2011-PCM.</p>
+      </div>
+    </div>
+  </section>
+</PageLayout>

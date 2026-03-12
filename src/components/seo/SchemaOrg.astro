@@ -1,0 +1,59 @@
+---
+/**
+ * SchemaOrg.astro
+ * Inyecta un bloque JSON-LD en el <head> para datos estructurados Schema.org.
+ * Referencia: docs/patterns/seo-rules.md → "Schema.org — Implementación Obligatoria"
+ */
+
+interface Props {
+  schema: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { schema } = Astro.props;
+
+// Schemas globales siempre presentes (Organization + WebSite con SearchAction)
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Business Dollar",
+  url: "https://business-dollar.pe",
+  logo: "https://business-dollar.pe/images/logo.svg",
+  description:
+    "Casa de cambio digital regulada por la SBS. Compra y venta de dólares online al mejor tipo de cambio en Perú.",
+  areaServed: "PE",
+  sameAs: [
+    "https://www.facebook.com/businessdollar",
+    "https://www.instagram.com/businessdollar",
+    "https://www.linkedin.com/company/businessdollar",
+  ],
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Business Dollar",
+  url: "https://business-dollar.pe",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://business-dollar.pe/blog?q={search_term}",
+    "query-input": "required name=search_term",
+  },
+};
+---
+
+<!-- Schema.org: Organization (global) -->
+<script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+<!-- Schema.org: WebSite + SearchAction (global) -->
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+
+<!-- Schema.org: específico por página -->
+{
+  Array.isArray(schema)
+    ? schema.map((s) => (
+        <script type="application/ld+json" set:html={JSON.stringify(s)} />
+      ))
+    : schema && Object.keys(schema).length > 0 && (
+        <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+      )
+}

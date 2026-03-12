@@ -1,0 +1,146 @@
+---
+/**
+ * politica-de-privacidad.astro
+ * Política de privacidad y protección de datos personales.
+ * Cumple con Ley N.° 29733 de Perú. Schema: WebPage.
+ * Referencia: docs/context/project-roadmap.md → Fase 2.8
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+import { company } from "../data/company";
+
+const today = new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" });
+
+const schema = {
+  "@type": "WebPage",
+  name: "Política de Privacidad — Business Dollar",
+  description: "Política de privacidad y tratamiento de datos personales de Business Dollar conforme a la Ley N.° 29733 del Perú.",
+  url: "https://business-dollar.pe/politica-de-privacidad",
+  dateModified: new Date().toISOString().split("T")[0],
+};
+
+const sections = [
+  {
+    id: "responsable",
+    title: "1. Responsable del tratamiento",
+    content: `${company.legalName} (RUC: ${company.ruc}), con domicilio en ${company.address}, es la empresa responsable del tratamiento de los datos personales recopilados a través de la plataforma ${company.url} y ${company.appUrl}.\n\nPuedes contactarnos sobre asuntos de privacidad en: ${company.email}`,
+  },
+  {
+    id: "datos-recopilados",
+    title: "2. Datos personales que recopilamos",
+    content: `Recopilamos las siguientes categorías de datos personales:\n\n**Datos de identificación:** Nombre completo, DNI o pasaporte, fecha de nacimiento, nacionalidad, estado civil.\n\n**Datos de contacto:** Dirección de correo electrónico, número de teléfono, domicilio.\n\n**Datos financieros:** Número(s) de cuenta bancaria, historial de operaciones realizadas en la Plataforma, información de origen de fondos.\n\n**Datos de uso:** Dirección IP, tipo de dispositivo, navegador, páginas visitadas, fecha y hora de acceso, cookies.\n\n**Datos adicionales KYC:** Fotografías del documento de identidad, fotografía del titular (selfie), documentos que acrediten el origen de fondos en operaciones superiores a los umbrales establecidos por la SBS.`,
+  },
+  {
+    id: "finalidad",
+    title: "3. Finalidad del tratamiento",
+    content: `Tratamos tus datos personales para las siguientes finalidades:\n\n• **Prestación del servicio:** Crear y gestionar tu cuenta, verificar tu identidad (KYC), procesar tus operaciones de cambio de divisas y emitir comprobantes.\n• **Cumplimiento normativo:** Cumplir con las obligaciones de prevención del lavado de activos (PLAFT) y financiamiento del terrorismo, conforme a las normas de la SBS y la UIF-Perú.\n• **Atención al cliente:** Responder a tus consultas, quejas y reclamos.\n• **Seguridad:** Detectar y prevenir fraudes, accesos no autorizados y actividades ilícitas.\n• **Comunicaciones:** Enviarte notificaciones transaccionales relacionadas con tus operaciones y comunicados sobre cambios en el servicio.\n• **Marketing (con tu consentimiento):** Enviarte información sobre promociones, novedades y contenido de interés. Puedes revocar este consentimiento en cualquier momento.\n• **Mejora del servicio:** Analizar el uso de la Plataforma para mejorar la experiencia del usuario mediante datos agregados y anonimizados.`,
+  },
+  {
+    id: "base-legal",
+    title: "4. Base legal del tratamiento",
+    content: `El tratamiento de tus datos se basa en:\n\n• **Ejecución contractual:** Para prestarte el servicio de cambio de divisas que solicitas.\n• **Obligación legal:** Para cumplir con las disposiciones de la Ley N.° 26702 (Ley del Sistema Financiero), la Ley N.° 27693 (PLAFT), sus modificatorias y las normas de la SBS.\n• **Interés legítimo:** Para prevenir el fraude y garantizar la seguridad de la Plataforma.\n• **Consentimiento:** Para el envío de comunicaciones comerciales y el uso de cookies no esenciales.`,
+  },
+  {
+    id: "comparticion",
+    title: "5. Compartición de datos con terceros",
+    content: `Business Dollar puede compartir tus datos con:\n\n• **Entidades financieras:** Los bancos asociados (BCP, BBVA, Scotiabank, Interbank) para procesar las transferencias correspondientes a tus operaciones.\n• **Autoridades competentes:** La SBS, la UIF-Perú, la SUNAT, el Ministerio Público u otras entidades, cuando sea requerido por ley o por orden judicial.\n• **Proveedores de servicios:** Empresas que nos prestan servicios tecnológicos, de verificación de identidad (KYC), almacenamiento en la nube o análisis de datos, bajo contratos de confidencialidad y con las garantías adecuadas.\n\nNo vendemos ni cedemos tus datos personales a terceros con fines comerciales.`,
+  },
+  {
+    id: "transferencia-internacional",
+    title: "6. Transferencia internacional de datos",
+    content: `Algunos de nuestros proveedores tecnológicos procesan datos en servidores ubicados fuera del Perú. En esos casos, nos aseguramos de que las transferencias se realicen conforme a los requisitos de la Ley N.° 29733 y solo hacia países con nivel de protección adecuado o bajo cláusulas contractuales tipo.`,
+  },
+  {
+    id: "retencion",
+    title: "7. Plazo de conservación",
+    content: `Conservamos tus datos personales durante el tiempo que mantengas una cuenta activa con Business Dollar y, tras su cancelación, durante los plazos mínimos exigidos por la normativa vigente:\n\n• Datos de identidad y financieros: 5 años desde la última operación (conforme a normativa PLAFT).\n• Datos de contacto y uso: 2 años desde la última actividad.\n• Comunicaciones de soporte: 1 año desde la resolución del caso.\n\nTranscurridos estos plazos, los datos son eliminados o anonimizados de forma segura.`,
+  },
+  {
+    id: "derechos",
+    title: "8. Tus derechos",
+    content: `Conforme a la Ley N.° 29733 y su reglamento, tienes los siguientes derechos respecto a tus datos personales:\n\n• **Acceso:** Saber qué datos tenemos sobre ti y cómo los usamos.\n• **Rectificación:** Corregir datos inexactos o incompletos.\n• **Cancelación:** Solicitar la eliminación de tus datos cuando ya no sean necesarios.\n• **Oposición:** Oponerte al tratamiento de tus datos para fines de marketing.\n• **Portabilidad:** Recibir tus datos en formato estructurado.\n\nPara ejercer estos derechos, envía una solicitud a ${company.email} con el asunto "Ejercicio de derechos ARCO" indicando tu nombre, DNI y el derecho que deseas ejercer. Responderemos en un plazo máximo de 20 días hábiles.`,
+  },
+  {
+    id: "seguridad",
+    title: "9. Seguridad de los datos",
+    content: `Implementamos medidas técnicas y organizativas apropiadas para proteger tus datos personales frente al acceso no autorizado, pérdida, alteración o divulgación, incluyendo:\n\n• Encriptación TLS 1.3 en todas las comunicaciones.\n• Almacenamiento de contraseñas mediante hashing seguro (bcrypt).\n• Control de acceso basado en roles para el personal interno.\n• Auditorías de seguridad periódicas.\n• Proceso de notificación de brechas de seguridad conforme a la normativa vigente.`,
+  },
+  {
+    id: "cookies",
+    title: "10. Cookies",
+    content: `Usamos cookies y tecnologías similares en nuestra Plataforma. Para información detallada, consulta nuestra <a href="/politica-de-cookies" class="text-accent-600 hover:underline">Política de Cookies</a>.`,
+  },
+  {
+    id: "menores",
+    title: "11. Menores de edad",
+    content: `Los servicios de Business Dollar están dirigidos exclusivamente a personas mayores de 18 años. No recopilamos intencionalmente datos de menores. Si tienes conocimiento de que un menor nos ha proporcionado datos personales, contáctanos para eliminarlos.`,
+  },
+  {
+    id: "cambios",
+    title: "12. Cambios en esta política",
+    content: `Podemos actualizar esta Política de Privacidad periódicamente. Te notificaremos sobre cambios relevantes a través de la Plataforma o por correo electrónico. La fecha de última actualización aparece al inicio de este documento.`,
+  },
+  {
+    id: "autoridad",
+    title: "13. Autoridad de control",
+    content: `Si consideras que el tratamiento de tus datos no es conforme a la Ley N.° 29733, puedes presentar una reclamación ante la Autoridad Nacional de Protección de Datos Personales (ANPDP), dependiente del Ministerio de Justicia y Derechos Humanos del Perú.`,
+  },
+];
+---
+
+<PageLayout
+  title="Política de Privacidad — Business Dollar"
+  description="Política de privacidad de Business Dollar: cómo recopilamos, usamos y protegemos tus datos personales conforme a la Ley N.° 29733 de Perú."
+  schema={schema}
+  breadcrumbs={[{ label: "Política de privacidad", href: "/politica-de-privacidad" }]}
+>
+  <section class="py-16 bg-white" aria-labelledby="privacidad-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="mb-10 pb-6 border-b border-neutral-200">
+        <h1 id="privacidad-heading" class="font-display text-4xl font-bold text-neutral-900 mb-3">
+          Política de Privacidad
+        </h1>
+        <p class="text-neutral-500 text-sm">
+          Última actualización: {today} · {company.legalName}
+        </p>
+      </div>
+
+      <div class="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
+        En Business Dollar nos comprometemos a proteger tu privacidad y tus datos personales conforme a la <strong>Ley N.° 29733</strong> de Protección de Datos Personales del Perú y sus normas reglamentarias.
+      </div>
+
+      <!-- Índice -->
+      <nav class="mb-10 bg-neutral-50 rounded-xl border border-neutral-200 p-5" aria-label="Índice de secciones">
+        <p class="text-sm font-semibold text-neutral-700 mb-3">Índice</p>
+        <ol class="space-y-1 text-sm">
+          {sections.map((s) => (
+            <li>
+              <a href={`#${s.id}`} class="text-accent-600 hover:underline">{s.title}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <div class="space-y-10">
+        {sections.map((s) => (
+          <div id={s.id}>
+            <h2 class="font-display text-xl font-bold text-neutral-900 mb-4">{s.title}</h2>
+            <div class="text-sm text-neutral-700 leading-relaxed whitespace-pre-line">
+              <Fragment set:html={s.content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-neutral-200 text-xs text-neutral-500 space-y-2">
+        <p>© {new Date().getFullYear()} {company.legalName}. Todos los derechos reservados.</p>
+        <p>
+          Ver también:
+          <a href="/terminos-y-condiciones" class="text-accent-600 hover:underline ml-1">Términos y Condiciones</a> ·
+          <a href="/politica-de-cookies" class="text-accent-600 hover:underline ml-1">Política de Cookies</a> ·
+          <a href="/libro-de-reclamaciones" class="text-accent-600 hover:underline ml-1">Libro de Reclamaciones</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</PageLayout>

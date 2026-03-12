@@ -1,0 +1,202 @@
+---
+/**
+ * sobre-nosotros.astro
+ * Página EEAT crítica: historia, equipo, misión, datos legales de la empresa.
+ * Schema: Organization detallado + Person por cada miembro del equipo.
+ * Referencia: docs/context/project-roadmap.md → Fase 2.2
+ * Referencia: docs/patterns/seo-rules.md → EEAT
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+import { company, social, bankPartners } from "../data/company";
+
+const orgSchema = {
+  "@type": "Organization",
+  name: company.name,
+  legalName: company.legalName,
+  url: company.url,
+  logo: "https://business-dollar.pe/images/logo.svg",
+  description:
+    "Casa de cambio digital fundada en Perú, regulada por la SBS. Especializada en compra y venta de dólares online para personas y empresas.",
+  foundingDate: String(company.founded),
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Lima",
+    addressRegion: "Lima",
+    addressCountry: "PE",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    telephone: company.phone,
+    email: company.email,
+    availableLanguage: "Spanish",
+    areaServed: "PE",
+  },
+  sameAs: [social.linkedin, social.instagram, social.facebook],
+};
+
+const teamMembers = [
+  {
+    name: "Equipo Business Dollar",
+    role: "Dirección General",
+    bio: "Fundadores con experiencia en servicios financieros digitales y el mercado cambiario peruano.",
+    initial: "B",
+    credentials: ["Finanzas corporativas", "Fintech"],
+  },
+];
+
+const values = [
+  {
+    title: "Transparencia",
+    body: "Publicamos el tipo de cambio en tiempo real y no cobramos comisiones ocultas. Lo que ves es exactamente lo que recibes.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  },
+  {
+    title: "Seguridad",
+    body: "Operamos bajo la supervisión directa de la SBS. Cumplimos todas las normas de prevención de lavado de activos y protección al consumidor.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>`,
+  },
+  {
+    title: "Accesibilidad",
+    body: "Nuestro servicio está diseñado para todos: desde la persona que cambia 100 dólares hasta la empresa que opera millones al mes.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  },
+  {
+    title: "Innovación",
+    body: "Estamos construyendo la mejor experiencia de cambio de divisas digital en Perú, con tecnología moderna y procesos ágiles.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+  },
+];
+---
+
+<PageLayout
+  title="Sobre nosotros — Quiénes somos"
+  description="Conoce a Business Dollar: casa de cambio digital peruana regulada por la SBS. Nuestra misión, historia, equipo y valores. Transparencia y seguridad en cada operación."
+  schema={orgSchema}
+  breadcrumbs={[{ label: "Sobre nosotros", href: "/sobre-nosotros" }]}
+>
+  <!-- Hero -->
+  <section class="bg-white border-b border-neutral-100 py-16 md:py-20" aria-labelledby="sobre-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <h1 id="sobre-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-6">
+          Somos Business Dollar
+        </h1>
+        <p class="text-xl text-neutral-600 leading-relaxed mb-6">
+          Una casa de cambio digital 100% peruana, fundada con la misión de democratizar el acceso a un tipo de cambio justo y transparente para todas las personas y empresas del Perú.
+        </p>
+        <p class="text-neutral-600 leading-relaxed">
+          Nacimos de la frustración con el sistema tradicional: tipos de cambio injustos en los bancos, inseguridad en casas de cambio físicas y falta de transparencia en el mercado. Creamos Business Dollar para cambiar eso.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Misión, visión -->
+  <section class="py-16 bg-neutral-50" aria-labelledby="mision-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-xl p-8 border border-neutral-200">
+          <div class="w-10 h-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <h2 id="mision-heading" class="font-display text-xl font-bold text-neutral-900 mb-3">Nuestra misión</h2>
+          <p class="text-neutral-600 leading-relaxed">
+            Brindar acceso a tipos de cambio competitivos, seguros y transparentes a todas las personas y empresas del Perú, eliminando las barreras e ineficiencias del sistema cambiario tradicional.
+          </p>
+        </div>
+        <div class="bg-white rounded-xl p-8 border border-neutral-200">
+          <div class="w-10 h-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h2 class="font-display text-xl font-bold text-neutral-900 mb-3">Nuestra visión</h2>
+          <p class="text-neutral-600 leading-relaxed">
+            Convertirnos en la plataforma de cambio de divisas más confiable y utilizada del Perú, referente de transparencia, innovación y excelencia en servicios financieros digitales.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Valores -->
+  <section class="py-16 bg-white" aria-labelledby="valores-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 id="valores-heading" class="font-display text-3xl font-bold text-neutral-900 mb-3">Nuestros valores</h2>
+        <p class="text-neutral-600 max-w-xl mx-auto">Los principios que guían cada decisión que tomamos en Business Dollar.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {values.map((v) => (
+          <div class="p-6 rounded-xl border border-neutral-200 hover:border-primary-200 hover:shadow-sm transition-all duration-200">
+            <div class="w-10 h-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center mb-4">
+              <Fragment set:html={v.icon} />
+            </div>
+            <h3 class="font-semibold text-neutral-900 mb-2">{v.title}</h3>
+            <p class="text-sm text-neutral-600 leading-relaxed">{v.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Datos legales / EEAT -->
+  <section class="py-16 bg-neutral-50" aria-labelledby="datos-legales-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto">
+        <h2 id="datos-legales-heading" class="font-display text-2xl font-bold text-neutral-900 mb-8 text-center">
+          Información de la empresa
+        </h2>
+
+        <div class="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+          <dl class="divide-y divide-neutral-100">
+            {[
+              { label: "Razón social", value: company.legalName },
+              { label: "RUC", value: company.ruc },
+              { label: "Registro SBS", value: `N.° ${company.sbsRegistro}` },
+              { label: "País de operación", value: "Perú" },
+              { label: "Año de fundación", value: String(company.founded) },
+              { label: "Email de contacto", value: company.email },
+              { label: "Bancos aliados", value: bankPartners.join(", ") },
+            ].map((row) => (
+              <div class="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-1">
+                <dt class="text-sm font-semibold text-neutral-500 sm:w-48 shrink-0">{row.label}</dt>
+                <dd class="text-sm text-neutral-900">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <p class="mt-6 text-xs text-neutral-500 leading-relaxed text-center">
+          Business Dollar opera bajo supervisión de la Superintendencia de Banca, Seguros y AFP (SBS) del Perú.
+          Cumplimos con toda la normativa vigente sobre prevención de lavado de activos y financiamiento del terrorismo (PLAFT).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-primary-600" aria-labelledby="cta-sobre-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 id="cta-sobre-heading" class="font-display text-2xl md:text-3xl font-bold text-white mb-4">
+        ¿Tienes alguna pregunta sobre nosotros?
+      </h2>
+      <p class="text-primary-100 mb-7">
+        Nuestro equipo está disponible para resolver todas tus dudas antes de realizar tu primera operación.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a
+          href="/contacto"
+          class="inline-flex items-center justify-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-xl hover:bg-primary-50 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        >
+          Contáctanos
+        </a>
+        <a
+          href="/preguntas-frecuentes"
+          class="inline-flex items-center justify-center gap-2 border-2 border-primary-400 text-white font-semibold px-6 py-3 rounded-xl hover:border-white transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        >
+          Ver preguntas frecuentes
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>

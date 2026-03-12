@@ -1,0 +1,65 @@
+---
+/**
+ * HeadMeta.astro
+ * Inyecta todos los meta tags SEO: title, description, canonical, OG, Twitter Cards.
+ * Referencia: docs/patterns/seo-rules.md → "Checklist por Página"
+ */
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  noindex?: boolean;
+  ogType?: "website" | "article";
+}
+
+const {
+  title,
+  description,
+  ogImage = "/images/og-default.jpg",
+  canonicalUrl,
+  noindex = false,
+  ogType = "website",
+} = Astro.props;
+
+const siteUrl = "https://business-dollar.pe";
+const canonical = canonicalUrl ?? new URL(Astro.url.pathname, siteUrl).href;
+const ogImageAbsolute = ogImage.startsWith("http")
+  ? ogImage
+  : `${siteUrl}${ogImage}`;
+
+// Title: keyword-first, 50-60 chars. El sufijo " | Business Dollar" se añade si no viene incluido.
+const fullTitle = title.includes("Business Dollar")
+  ? title
+  : `${title} | Business Dollar`;
+---
+
+<!-- Primary Meta Tags -->
+<title>{fullTitle}</title>
+<meta name="title" content={fullTitle} />
+<meta name="description" content={description} />
+
+<!-- Canonical -->
+<link rel="canonical" href={canonical} />
+
+<!-- Robots -->
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Open Graph -->
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageAbsolute} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="Business Dollar" />
+<meta property="og:locale" content="es_PE" />
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonical} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageAbsolute} />

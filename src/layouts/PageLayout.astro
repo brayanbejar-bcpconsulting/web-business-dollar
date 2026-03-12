@@ -1,0 +1,62 @@
+---
+/**
+ * PageLayout.astro
+ * Layout para páginas estáticas del sitio (sobre nosotros, servicios, FAQ, contacto, legales, etc.)
+ * Extiende BaseLayout con Navbar + Breadcrumbs + Footer.
+ * Referencia: docs/patterns/architecture.md → Layouts → PageLayout
+ */
+
+import BaseLayout from "./BaseLayout.astro";
+import Navbar from "../components/organisms/Navbar.astro";
+import Footer from "../components/organisms/Footer.astro";
+import Breadcrumbs from "../components/seo/Breadcrumbs.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+  noindex?: boolean;
+  schema?: object;
+  /** Items de breadcrumb. El primero ("Inicio") se agrega automáticamente en Breadcrumbs.astro */
+  breadcrumbs?: Array<{ label: string; href: string }>;
+  /** Si true, no se muestra el breadcrumb (útil para la home) */
+  hideBreadcrumbs?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  canonicalUrl,
+  noindex = false,
+  schema,
+  breadcrumbs = [],
+  hideBreadcrumbs = false,
+} = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  canonicalUrl={canonicalUrl}
+  noindex={noindex}
+  schema={schema}
+>
+  <Navbar />
+
+  {!hideBreadcrumbs && breadcrumbs.length > 0 && (
+    <div class="border-b border-neutral-200 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
+    </div>
+  )}
+
+  <main id="main-content" tabindex="-1">
+    <slot />
+  </main>
+
+  <Footer />
+</BaseLayout>

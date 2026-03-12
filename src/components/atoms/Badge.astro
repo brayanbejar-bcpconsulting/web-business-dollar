@@ -1,0 +1,45 @@
+---
+/**
+ * Badge.astro
+ * Indicador visual pequeño para estados y categorías.
+ * Referencia: docs/patterns/design-system.md → "Badge / Tag"
+ */
+
+interface Props {
+  variant?: "default" | "success" | "warning" | "error" | "info";
+  size?: "sm" | "md";
+  class?: string;
+}
+
+const {
+  variant = "default",
+  size = "md",
+  class: className = "",
+} = Astro.props;
+
+const variantClasses = {
+  default: "bg-neutral-100 text-neutral-700",
+  success: "bg-primary-100 text-primary-700",
+  warning: "bg-amber-100 text-amber-700",
+  error: "bg-red-100 text-red-700",
+  info: "bg-accent-50 text-accent-700",
+};
+
+const sizeClasses = {
+  sm: "px-2 py-0.5 text-xs",
+  md: "px-2.5 py-1 text-xs",
+};
+
+const classes = [
+  "inline-flex items-center font-medium rounded-full",
+  variantClasses[variant],
+  sizeClasses[size],
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<span class={classes}>
+  <slot />
+</span>

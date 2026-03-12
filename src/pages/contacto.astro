@@ -1,0 +1,277 @@
+---
+/**
+ * contacto.astro
+ * Página de contacto con información de canales, horarios y formulario.
+ * Schema: ContactPage + ContactPoint.
+ * Referencia: docs/context/project-roadmap.md → Fase 2.6
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+import { company, social } from "../data/company";
+
+const contactSchema = {
+  "@type": "ContactPage",
+  name: "Contacto — Business Dollar",
+  description: "Canales de contacto de Business Dollar: email, teléfono, WhatsApp y horarios de atención.",
+  url: "https://business-dollar.pe/contacto",
+  mainEntity: {
+    "@type": "Organization",
+    name: company.name,
+    url: company.url,
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        email: company.email,
+        telephone: company.phone,
+        availableLanguage: "Spanish",
+        hoursAvailable: {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "09:00",
+          closes: "18:00",
+        },
+      },
+    ],
+  },
+};
+
+const channels = [
+  {
+    title: "Email",
+    value: company.email,
+    href: `mailto:${company.email}`,
+    note: "Respuesta en menos de 24 horas hábiles",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`,
+  },
+  {
+    title: "WhatsApp",
+    value: company.whatsapp,
+    href: `https://wa.me/${company.whatsapp.replace(/\D/g, "")}`,
+    note: "Chat directo con el equipo",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
+  },
+  {
+    title: "Teléfono",
+    value: company.phone,
+    href: `tel:${company.phone.replace(/\s/g, "")}`,
+    note: "Lunes a viernes, 9 a.m. – 6 p.m.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+  },
+];
+---
+
+<PageLayout
+  title="Contacto — Business Dollar | Atención al Cliente"
+  description="Contacta a Business Dollar por email, WhatsApp o teléfono. Atención de lunes a viernes de 9 a.m. a 6 p.m. Respuesta garantizada en menos de 24 horas hábiles."
+  schema={contactSchema}
+  breadcrumbs={[{ label: "Contacto", href: "/contacto" }]}
+>
+  <!-- Hero -->
+  <section class="bg-white border-b border-neutral-100 py-16 md:py-20" aria-labelledby="contacto-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <h1 id="contacto-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-6">
+          Estamos aquí para ayudarte
+        </h1>
+        <p class="text-xl text-neutral-600 leading-relaxed">
+          Nuestro equipo de soporte está disponible de lunes a viernes de 9 a.m. a 6 p.m. (hora de Lima). Elige el canal que prefieras.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Canales de contacto + Formulario -->
+  <section class="py-16 bg-neutral-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12">
+
+        <!-- Canales -->
+        <div>
+          <h2 class="font-display text-2xl font-bold text-neutral-900 mb-8">
+            Canales de atención
+          </h2>
+
+          <div class="space-y-4 mb-10">
+            {channels.map((ch) => (
+              <a
+                href={ch.href}
+                target={ch.href.startsWith("http") ? "_blank" : undefined}
+                rel={ch.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                class="flex items-center gap-4 bg-white rounded-xl p-5 border border-neutral-200 hover:border-primary-300 hover:shadow-sm transition-all duration-150 group"
+              >
+                <div class="w-11 h-11 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors">
+                  <Fragment set:html={ch.icon} />
+                </div>
+                <div>
+                  <p class="font-semibold text-neutral-900 group-hover:text-primary-700 transition-colors">{ch.title}</p>
+                  <p class="text-sm text-accent-600 font-medium">{ch.value}</p>
+                  <p class="text-xs text-neutral-500 mt-0.5">{ch.note}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <!-- Horario -->
+          <div class="bg-white rounded-xl p-6 border border-neutral-200">
+            <h3 class="font-semibold text-neutral-900 mb-4 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Horario de atención
+            </h3>
+            <dl class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <dt class="text-neutral-600">Lunes a viernes</dt>
+                <dd class="font-semibold text-neutral-900">9:00 a.m. – 6:00 p.m.</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-neutral-600">Sábados</dt>
+                <dd class="font-semibold text-neutral-900">9:00 a.m. – 1:00 p.m.</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-neutral-600">Domingos y feriados</dt>
+                <dd class="text-neutral-400">Cerrado</dd>
+              </div>
+            </dl>
+            <p class="mt-4 text-xs text-neutral-500">Hora de Lima, Perú (UTC−5). Para emergencias de seguridad respondemos fuera de horario.</p>
+          </div>
+
+          <!-- Redes sociales -->
+          <div class="mt-6">
+            <p class="text-sm font-semibold text-neutral-700 mb-3">Síguenos en redes sociales</p>
+            <div class="flex gap-3">
+              <a href={social.facebook} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white border border-neutral-200 hover:border-primary-300 text-neutral-500 hover:text-primary-600 flex items-center justify-center transition-all duration-150" aria-label="Facebook de Business Dollar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+              <a href={social.instagram} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white border border-neutral-200 hover:border-primary-300 text-neutral-500 hover:text-primary-600 flex items-center justify-center transition-all duration-150" aria-label="Instagram de Business Dollar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              </a>
+              <a href={social.linkedin} target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-white border border-neutral-200 hover:border-primary-300 text-neutral-500 hover:text-primary-600 flex items-center justify-center transition-all duration-150" aria-label="LinkedIn de Business Dollar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de contacto -->
+        <div>
+          <h2 class="font-display text-2xl font-bold text-neutral-900 mb-8">
+            Envíanos un mensaje
+          </h2>
+
+          <form
+            name="contacto"
+            method="POST"
+            action="/contacto/gracias"
+            class="bg-white rounded-xl border border-neutral-200 p-6 sm:p-8 space-y-5"
+            novalidate
+          >
+            <div class="grid sm:grid-cols-2 gap-5">
+              <div>
+                <label for="nombre" class="block text-sm font-semibold text-neutral-700 mb-1.5">
+                  Nombre completo <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  required
+                  autocomplete="name"
+                  placeholder="Juan Pérez"
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 placeholder-neutral-400 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
+                />
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-semibold text-neutral-700 mb-1.5">
+                  Correo electrónico <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  placeholder="juan@correo.com"
+                  class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 placeholder-neutral-400 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="motivo" class="block text-sm font-semibold text-neutral-700 mb-1.5">
+                Motivo de consulta <span class="text-red-500" aria-hidden="true">*</span>
+              </label>
+              <select
+                id="motivo"
+                name="motivo"
+                required
+                class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
+              >
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="operacion">Consulta sobre una operación</option>
+                <option value="cuenta">Problema con mi cuenta</option>
+                <option value="tipo-de-cambio">Información sobre el tipo de cambio</option>
+                <option value="seguridad">Reporte de seguridad</option>
+                <option value="reclamo">Presentar un reclamo</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="mensaje" class="block text-sm font-semibold text-neutral-700 mb-1.5">
+                Mensaje <span class="text-red-500" aria-hidden="true">*</span>
+              </label>
+              <textarea
+                id="mensaje"
+                name="mensaje"
+                required
+                rows="5"
+                placeholder="Describe tu consulta con el mayor detalle posible..."
+                class="w-full px-4 py-2.5 rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-900 placeholder-neutral-400 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow resize-none"
+              ></textarea>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <input
+                type="checkbox"
+                id="privacidad"
+                name="privacidad"
+                required
+                class="mt-0.5 w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500"
+              />
+              <label for="privacidad" class="text-xs text-neutral-600 leading-relaxed">
+                He leído y acepto la <a href="/politica-de-privacidad" class="text-accent-600 hover:underline">Política de Privacidad</a>. Acepto que Business Dollar use mis datos para responder a esta consulta.
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-primary-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-primary-700 active:bg-primary-800 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
+            >
+              Enviar mensaje
+            </button>
+
+            <p class="text-xs text-neutral-400 text-center">
+              Respondemos en menos de 24 horas hábiles. Nunca compartimos tus datos con terceros.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mapa / Ubicación info -->
+  <section class="py-12 bg-white border-t border-neutral-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-neutral-50 rounded-xl border border-neutral-200 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <p class="font-semibold text-neutral-900">Empresa 100% digital — sin oficinas físicas</p>
+          <p class="text-sm text-neutral-600 mt-0.5">
+            Business Dollar opera únicamente de forma online. No atendemos en persona. {company.address}.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>
