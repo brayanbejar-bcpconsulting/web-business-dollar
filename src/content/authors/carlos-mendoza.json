@@ -1,0 +1,15 @@
+{
+  "name": "Carlos Mendoza",
+  "role": "Especialista en Mercado de Divisas",
+  "bio": "Economista con más de 8 años de experiencia en el mercado cambiario peruano. Ha trabajado en el área de tesorería de entidades financieras reguladas por la SBS y actualmente lidera el equipo de análisis de Business Dollar. Egresado de la Pontificia Universidad Católica del Perú (PUCP).",
+  "avatar": "/images/authors/carlos-mendoza.jpg",
+  "credentials": [
+    "Licenciado en Economía — PUCP",
+    "Especialización en Mercados Financieros — Universidad del Pacífico",
+    "8+ años en mercado cambiario peruano",
+    "Ex analista de tesorería en banco regulado SBS"
+  ],
+  "social": {
+    "linkedin": "https://linkedin.com/in/carlos-mendoza-divisas"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Ana Quispe",
+  "role": "Analista de Finanzas Personales",
+  "bio": "Contadora Pública Colegiada con especialización en finanzas personales y planificación patrimonial. Escribe sobre educación financiera y estrategias de ahorro para el mercado peruano. Colaboradora frecuente en medios especializados en economía doméstica.",
+  "avatar": "/images/authors/ana-quispe.jpg",
+  "credentials": [
+    "Contadora Pública Colegiada — UNMSM",
+    "Diplomado en Finanzas Personales — CENTRUM PUCP",
+    "5+ años asesorando en planificación financiera familiar",
+    "Miembro del Colegio de Contadores Públicos de Lima"
+  ],
+  "social": {
+    "linkedin": "https://linkedin.com/in/ana-quispe-finanzas"
+  }
+}
