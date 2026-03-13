@@ -1,0 +1,115 @@
+---
+/**
+ * blog/[...slug].astro — Dynamic blog post template
+ * Renders individual blog posts using BlogLayout.
+ * In Astro v6 with glob() loader, entry.id = "subfolder/filename" (e.g. "tipo-de-cambio/tipo-de-cambio-dolar-peru")
+ * URL slug = last path segment only (e.g. "tipo-de-cambio-dolar-peru")
+ * Referencia: docs/patterns/architecture.md → Content Collections
+ * Referencia: docs/context/project-roadmap.md → Fase 3
+ */
+import { getCollection, getEntry, render } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import { getReadingTime } from "../../utils/reading-time";
+import AccordionItem from "../../components/molecules/AccordionItem.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => {
+    // Derive flat URL slug from last path segment
+    const slug = post.id.split("/").pop() ?? post.id;
+    return {
+      params: { slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+// Look up full author data
+const authorEntry = await getEntry("authors", post.data.author);
+const author = authorEntry
+  ? {
+      name: authorEntry.data.name,
+      role: authorEntry.data.role,
+      bio: authorEntry.data.bio,
+      avatar: authorEntry.data.avatar,
+      linkedin: authorEntry.data.social?.linkedin,
+    }
+  : {
+      name: post.data.author,
+    };
+
+// Estimate reading time from rendered headings as a proxy (real impl uses body)
+const readingTime = getReadingTime(post.body ?? "");
+
+// Category label for breadcrumb
+const categoryLabels: Record<string, string> = {
+  "tipo-de-cambio": "Tipo de Cambio",
+  guias: "Guías",
+  seguridad: "Seguridad",
+  finanzas: "Finanzas Personales",
+  noticias: "Noticias",
+};
+
+const categoryLabel = categoryLabels[post.data.category] ?? post.data.category;
+const slug = post.id.split("/").pop() ?? post.id;
+const canonicalUrl = `https://business-dollar.pe/blog/${slug}`;
+---
+
+<BlogLayout
+  title={post.data.seoTitle ?? post.data.title}
+  description={post.data.seoDescription ?? post.data.description}
+  ogImage={post.data.ogImage}
+  canonicalUrl={canonicalUrl}
+  publishDate={post.data.publishDate}
+  updatedDate={post.data.updatedDate}
+  author={author}
+  category={post.data.category}
+  tags={post.data.tags}
+  readingTime={readingTime}
+  breadcrumbs={[
+    { label: categoryLabel, href: `/blog/categoria/${post.data.category}` },
+    { label: post.data.title, href: `/blog/${slug}` },
+  ]}
+>
+  <Content />
+
+  <!-- FAQ section if present -->
+  {
+    post.data.faq && post.data.faq.length > 0 && (
+      <section aria-labelledby="faq-heading" class="mt-12">
+        <h2 id="faq-heading" class="font-display text-2xl font-bold text-neutral-900 mb-6">
+          Preguntas frecuentes
+        </h2>
+        <div class="space-y-4">
+          {post.data.faq.map((item) => (
+            <AccordionItem question={item.question} answer={item.answer} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- FAQPage Schema -->
+  {
+    post.data.faq && post.data.faq.length > 0 && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: post.data.faq.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        })}
+      />
+    )
+  }
+</BlogLayout>

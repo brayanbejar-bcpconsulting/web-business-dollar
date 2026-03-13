@@ -1,0 +1,158 @@
+---
+/**
+ * libro-de-reclamaciones/confirmacion.astro
+ * Página de confirmación post-reclamación.
+ * Obligación legal: Ley N.° 29571 — Código de Protección al Consumidor.
+ * noindex: true — no debe aparecer en buscadores.
+ */
+import PageLayout from "../../layouts/PageLayout.astro";
+import { company } from "../../data/company";
+import Button from "../../components/atoms/Button.astro";
+---
+
+<PageLayout
+  title="Reclamación registrada — Business Dollar"
+  description="Tu reclamación ha sido registrada. Business Dollar responderá en el plazo legal establecido."
+  noindex={true}
+  hideBreadcrumbs={true}
+>
+  <section class="min-h-[70vh] flex items-center justify-center py-20 bg-white">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+
+      <!-- Encabezado -->
+      <div class="text-center mb-8">
+        <div class="flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mx-auto mb-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-green-600"
+            aria-hidden="true"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+        </div>
+        <h1 class="font-display text-3xl font-bold text-neutral-900 mb-3">
+          Reclamación registrada exitosamente
+        </h1>
+        <p class="text-neutral-600 max-w-lg mx-auto leading-relaxed">
+          Hemos recibido tu reclamación y la procesaremos de acuerdo con la normativa peruana de protección al consumidor.
+        </p>
+      </div>
+
+      <!-- Aviso legal formal -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+        <div class="flex items-start gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 shrink-0 mt-0.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <div>
+            <p class="text-sm font-semibold text-blue-900 mb-2">Información sobre el proceso de atención</p>
+            <p class="text-sm text-blue-800 leading-relaxed">
+              De acuerdo con el <strong>Código de Protección y Defensa del Consumidor (Ley N.° 29571)</strong>,
+              {company.legalName} tiene un plazo de <strong>30 días calendario</strong> para dar respuesta a tu reclamación
+              desde la fecha de registro.
+            </p>
+            <p class="text-sm text-blue-700 mt-2 leading-relaxed">
+              Recibirás la respuesta en el correo electrónico que proporcionaste al momento de registrar la reclamación.
+              Conserva el número de seguimiento que se te enviará por correo.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pasos del proceso -->
+      <div class="bg-white rounded-xl border border-neutral-200 p-6 mb-6">
+        <h2 class="font-semibold text-neutral-800 mb-5">¿Qué sucede ahora?</h2>
+        <ol class="space-y-4" role="list">
+          {[
+            {
+              step: "1",
+              title: "Confirmación por correo",
+              description: "Recibirás un correo de confirmación con el número de seguimiento de tu reclamación en las próximas horas hábiles.",
+            },
+            {
+              step: "2",
+              title: "Revisión del caso",
+              description: "Nuestro equipo de atención al cliente analizará tu reclamación y recopilará la información necesaria para dar respuesta.",
+            },
+            {
+              step: "3",
+              title: "Respuesta formal",
+              description: "Dentro del plazo legal de 30 días calendario, recibirás nuestra respuesta formal por el mismo correo electrónico.",
+            },
+            {
+              step: "4",
+              title: "Resolución",
+              description: "Si la reclamación procede, coordinaremos las acciones correctivas necesarias. Si no procede, explicaremos las razones de forma detallada.",
+            },
+          ].map((item) => (
+            <li class="flex items-start gap-4">
+              <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">
+                {item.step}
+              </div>
+              <div>
+                <p class="font-semibold text-neutral-800 text-sm">{item.title}</p>
+                <p class="text-sm text-neutral-600 leading-relaxed mt-0.5">{item.description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <!-- Contacto directo para urgencias -->
+      <div class="bg-neutral-50 rounded-xl border border-neutral-200 p-6 mb-6">
+        <h2 class="font-semibold text-neutral-800 mb-3">Contacto directo</h2>
+        <p class="text-sm text-neutral-600 mb-4">Si tu caso es de carácter urgente, puedes contactarnos directamente:</p>
+        <div class="space-y-2">
+          <a
+            href={`mailto:${company.email}`}
+            class="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            {company.email}
+          </a>
+          <a
+            href={`tel:${company.phone}`}
+            class="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6 19.79 19.79 0 0 1 1.58 5a2 2 0 0 1 1.99-2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.4a16 16 0 0 0 5.55 5.6l.92-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            {company.phone}
+          </a>
+        </div>
+        <p class="text-xs text-neutral-500 mt-3">Atención: lunes a viernes, 9:00 am – 6:00 pm (hora Lima)</p>
+      </div>
+
+      <!-- INDECOPI -->
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 text-sm text-amber-800">
+        <p>
+          <strong>¿No estás satisfecho con nuestra respuesta?</strong> Tienes derecho a presentar tu reclamación
+          ante el <strong>INDECOPI</strong> (Instituto Nacional de Defensa de la Competencia y de la Protección
+          de la Propiedad Intelectual) si consideras que tu reclamo no fue atendido correctamente.
+          Más información en{" "}
+          <a
+            href="https://www.indecopi.gob.pe"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold underline hover:text-amber-900 transition-colors"
+          >
+            indecopi.gob.pe
+          </a>.
+        </p>
+      </div>
+
+      <!-- Volver -->
+      <div class="text-center">
+        <Button href="/" variant="ghost" size="sm">
+          Volver al inicio
+        </Button>
+      </div>
+
+    </div>
+  </section>
+</PageLayout>

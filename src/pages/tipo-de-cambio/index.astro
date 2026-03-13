@@ -1,0 +1,390 @@
+---
+/**
+ * tipo-de-cambio/index.astro
+ * Hub page del cluster "Tipo de cambio".
+ * Incluye widget en tiempo real con fetch client-side a la API del BCRP,
+ * tabla comparativa de fuentes (BD / BCRP / SUNAT / SBS) y cards a sub-páginas.
+ * Schema: FinancialService + BreadcrumbList
+ * Referencia: docs/context/project-roadmap.md → ad-hoc improvements (Bloque B)
+ */
+import PageLayout from "../../layouts/PageLayout.astro";
+import { company } from "../../data/company";
+import YMYLDisclaimer from "../../components/sections/YMYLDisclaimer.astro";
+import CTASection from "../../components/sections/CTASection.astro";
+import Button from "../../components/atoms/Button.astro";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FinancialService",
+      name: "Tipo de Cambio Dólar — Business Dollar",
+      description:
+        "Consulta el tipo de cambio del dólar hoy en Perú (USD/PEN) en tiempo real. Datos del BCRP, SUNAT y SBS. Casa de cambio digital regulada.",
+      url: "https://business-dollar.pe/tipo-de-cambio",
+      provider: {
+        "@type": "Organization",
+        name: company.name,
+        url: company.url,
+      },
+      areaServed: { "@type": "Country", name: "Perú" },
+      currenciesAccepted: "PEN, USD",
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Inicio",
+          item: "https://business-dollar.pe/",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Tipo de Cambio",
+          item: "https://business-dollar.pe/tipo-de-cambio",
+        },
+      ],
+    },
+  ],
+};
+---
+
+<PageLayout
+  title="Tipo de Cambio Dólar Hoy en Perú — USD/PEN en Tiempo Real | Business Dollar"
+  description="Consulta el tipo de cambio del dólar hoy en Perú (USD/PEN). Datos oficiales del BCRP actualizados. Compara el TC SUNAT, SBS y el mercado. Casa de cambio digital regulada."
+  schema={schema}
+  breadcrumbs={[{ label: "Tipo de Cambio", href: "/tipo-de-cambio" }]}
+>
+  <YMYLDisclaimer message="El tipo de cambio varía constantemente. Los datos mostrados provienen de la API pública del BCRP y se actualizan automáticamente. El tipo de cambio de tu operación se confirma al iniciarla en la plataforma." />
+
+  <!-- Hero con widget en tiempo real -->
+  <section class="bg-white border-b border-neutral-100 py-14 md:py-20" aria-labelledby="tc-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <!-- Copy -->
+        <div>
+          <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-primary-700 bg-primary-50 border border-primary-200 px-3 py-1 rounded-full mb-4">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden="true"></span>
+            Actualizado automáticamente — BCRP
+          </span>
+          <h1 id="tc-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-5 leading-tight">
+            Tipo de cambio<br />dólar hoy en Perú
+          </h1>
+          <p class="text-lg text-neutral-600 leading-relaxed mb-6">
+            Consulta el USD/PEN en tiempo real con datos oficiales del Banco Central de Reserva del Perú. Cambia dólares al mejor tipo de cambio con Business Dollar.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <Button href="https://app.business-dollar.pe/register" variant="primary" size="lg" target="_blank">
+              Cambiar dólares ahora
+            </Button>
+            <Button href="/calculadora-tipo-de-cambio" variant="outline" size="lg">
+              Usar calculadora
+            </Button>
+          </div>
+        </div>
+
+        <!-- Widget en tiempo real -->
+        <div class="bg-white rounded-2xl border-2 border-neutral-200 shadow-lg overflow-hidden" aria-live="polite" aria-label="Tipo de cambio USD/PEN en tiempo real">
+          <!-- Header del widget -->
+          <div class="bg-neutral-900 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl" aria-hidden="true">💵</span>
+              <div>
+                <p class="text-white font-bold text-sm">USD / PEN</p>
+                <p class="text-neutral-400 text-xs">Tipo de cambio — BCRP</p>
+              </div>
+            </div>
+            <div id="tc-status" class="flex items-center gap-1.5 text-xs text-neutral-400">
+              <span class="w-1.5 h-1.5 rounded-full bg-neutral-600" aria-hidden="true" id="tc-dot"></span>
+              <span id="tc-status-text">Cargando...</span>
+            </div>
+          </div>
+
+          <!-- Tasas -->
+          <div class="grid grid-cols-2 divide-x divide-neutral-100 bg-white">
+            <div class="px-6 py-6">
+              <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Compra</p>
+              <p id="tc-compra" class="font-display text-4xl font-bold text-primary-600 tabular-nums" aria-label="Tipo de cambio compra">—</p>
+              <p class="text-xs text-neutral-400 mt-1">Soles → Dólares</p>
+            </div>
+            <div class="px-6 py-6">
+              <p class="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Venta</p>
+              <p id="tc-venta" class="font-display text-4xl font-bold text-red-600 tabular-nums" aria-label="Tipo de cambio venta">—</p>
+              <p class="text-xs text-neutral-400 mt-1">Dólares → Soles</p>
+            </div>
+          </div>
+
+          <!-- Footer del widget -->
+          <div class="bg-neutral-50 border-t border-neutral-100 px-6 py-3 flex items-center justify-between">
+            <p class="text-xs text-neutral-500" id="tc-fecha">Fecha: —</p>
+            <a
+              href="https://estadisticas.bcrp.gob.pe"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
+            >
+              Fuente: BCRP
+            </a>
+          </div>
+
+          <!-- Fallback si falla el fetch -->
+          <div id="tc-fallback" class="hidden bg-amber-50 border-t border-amber-200 px-6 py-4 text-center">
+            <p class="text-xs text-amber-700 mb-2">No se pudo cargar el tipo de cambio en este momento.</p>
+            <a
+              href="https://app.business-dollar.pe/register"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs font-semibold text-primary-600 hover:text-primary-700"
+            >
+              Consulta el TC en la app →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabla comparativa de fuentes -->
+  <section class="py-16 bg-neutral-50" aria-labelledby="fuentes-heading">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <h2 id="fuentes-heading" class="font-display text-2xl md:text-3xl font-bold text-neutral-900 mb-3">
+          ¿Qué tipo de cambio necesitas?
+        </h2>
+        <p class="text-neutral-600 max-w-xl mx-auto text-sm leading-relaxed">
+          En Perú existen varios tipos de cambio según su uso. Entiende la diferencia antes de operar.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-neutral-200 shadow-sm">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-neutral-800 text-white">
+              <th scope="col" class="px-5 py-4 text-left font-semibold">Fuente</th>
+              <th scope="col" class="px-5 py-4 text-left font-semibold">¿Para qué se usa?</th>
+              <th scope="col" class="px-5 py-4 text-left font-semibold">Frecuencia</th>
+              <th scope="col" class="px-5 py-4 text-left font-semibold">¿Es el mejor para cambiar?</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-neutral-100">
+            <tr class="bg-primary-50/40">
+              <td class="px-5 py-4 font-semibold text-primary-700">
+                <span class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-primary-500 shrink-0"></span>
+                  Business Dollar
+                </span>
+              </td>
+              <td class="px-5 py-4 text-neutral-700">Cambiar dólares de forma rápida y conveniente online</td>
+              <td class="px-5 py-4 text-neutral-600">Tiempo real (actualizado en cada operación)</td>
+              <td class="px-5 py-4 text-primary-700 font-semibold">Sí — el mejor spread del mercado digital</td>
+            </tr>
+            <tr>
+              <td class="px-5 py-4 font-medium text-neutral-800">BCRP (mercado)</td>
+              <td class="px-5 py-4 text-neutral-600">Referencia oficial del mercado financiero peruano</td>
+              <td class="px-5 py-4 text-neutral-600">Diario (días hábiles)</td>
+              <td class="px-5 py-4 text-neutral-500">Referencial — no se puede operar directamente</td>
+            </tr>
+            <tr class="bg-neutral-50/50">
+              <td class="px-5 py-4 font-medium text-neutral-800">
+                <a href="/tipo-de-cambio/sunat" class="text-primary-600 hover:underline">TC SUNAT</a>
+              </td>
+              <td class="px-5 py-4 text-neutral-600">Declaración de impuestos y registros contables</td>
+              <td class="px-5 py-4 text-neutral-600">Publicado mensualmente por SUNAT</td>
+              <td class="px-5 py-4 text-neutral-500">No — solo para fines tributarios</td>
+            </tr>
+            <tr>
+              <td class="px-5 py-4 font-medium text-neutral-800">
+                <a href="/tipo-de-cambio/sbs" class="text-primary-600 hover:underline">TC SBS</a>
+              </td>
+              <td class="px-5 py-4 text-neutral-600">Entidades financieras supervisadas (bancos, cajas)</td>
+              <td class="px-5 py-4 text-neutral-600">Diario (días hábiles)</td>
+              <td class="px-5 py-4 text-neutral-500">No — es el promedio del sistema bancario</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-neutral-400 mt-3 text-center">
+        Los valores son referenciales. El tipo de cambio de tu operación en Business Dollar se confirma al iniciarla.
+      </p>
+    </div>
+  </section>
+
+  <!-- Cards a sub-páginas -->
+  <section class="py-16 bg-white" aria-labelledby="explorar-heading">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="explorar-heading" class="font-display text-2xl font-bold text-neutral-900 mb-8 text-center">
+        Aprende más sobre el tipo de cambio en Perú
+      </h2>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <!-- TC SUNAT -->
+        <a
+          href="/tipo-de-cambio/sunat"
+          class="group bg-white rounded-xl border-2 border-neutral-200 hover:border-primary-300 hover:shadow-md p-6 transition-all duration-200 flex flex-col gap-4"
+        >
+          <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div>
+            <h3 class="font-display text-lg font-bold text-neutral-900 group-hover:text-primary-700 transition-colors mb-2">
+              Tipo de cambio SUNAT
+            </h3>
+            <p class="text-sm text-neutral-600 leading-relaxed">
+              ¿Qué es el tipo de cambio SUNAT? ¿Cuándo debes usarlo? Aprende cómo aplicarlo en tus declaraciones de impuestos y contabilidad empresarial.
+            </p>
+          </div>
+          <span class="text-sm font-semibold text-primary-600 group-hover:text-primary-700 flex items-center gap-1">
+            Leer guía
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+        </a>
+
+        <!-- TC SBS -->
+        <a
+          href="/tipo-de-cambio/sbs"
+          class="group bg-white rounded-xl border-2 border-neutral-200 hover:border-primary-300 hover:shadow-md p-6 transition-all duration-200 flex flex-col gap-4"
+        >
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+          </div>
+          <div>
+            <h3 class="font-display text-lg font-bold text-neutral-900 group-hover:text-primary-700 transition-colors mb-2">
+              Tipo de cambio SBS
+            </h3>
+            <p class="text-sm text-neutral-600 leading-relaxed">
+              Entiende qué es el tipo de cambio publicado por la Superintendencia de Banca, Seguros y AFP y cómo Business Dollar opera bajo esta supervisión.
+            </p>
+          </div>
+          <span class="text-sm font-semibold text-primary-600 group-hover:text-primary-700 flex items-center gap-1">
+            Leer guía
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+        </a>
+
+        <!-- Calculadora -->
+        <a
+          href="/calculadora-tipo-de-cambio"
+          class="group bg-primary-50 rounded-xl border-2 border-primary-200 hover:border-primary-400 hover:shadow-md p-6 transition-all duration-200 flex flex-col gap-4"
+        >
+          <div class="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="14" y2="14"/></svg>
+          </div>
+          <div>
+            <h3 class="font-display text-lg font-bold text-neutral-900 group-hover:text-primary-700 transition-colors mb-2">
+              Calculadora de tipo de cambio
+            </h3>
+            <p class="text-sm text-neutral-600 leading-relaxed">
+              Calcula cuántos soles o dólares recibirías con Business Dollar. Compara con el tipo de cambio bancario y ve cuánto ahorras.
+            </p>
+          </div>
+          <span class="text-sm font-semibold text-primary-600 group-hover:text-primary-700 flex items-center gap-1">
+            Usar calculadora
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+        </a>
+
+        <!-- Blog TC -->
+        <a
+          href="/blog/tipo-de-cambio-dolar-peru"
+          class="group bg-white rounded-xl border-2 border-neutral-200 hover:border-primary-300 hover:shadow-md p-6 transition-all duration-200 flex flex-col gap-4"
+        >
+          <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-600" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+          </div>
+          <div>
+            <h3 class="font-display text-lg font-bold text-neutral-900 group-hover:text-primary-700 transition-colors mb-2">
+              ¿Por qué sube y baja el dólar en Perú?
+            </h3>
+            <p class="text-sm text-neutral-600 leading-relaxed">
+              Factores que influyen en el tipo de cambio USD/PEN: política monetaria del BCRP, reservas internacionales, contexto global y más.
+            </p>
+          </div>
+          <span class="text-sm font-semibold text-primary-600 group-hover:text-primary-700 flex items-center gap-1">
+            Leer artículo
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    heading="Cambia dólares al mejor tipo de cambio"
+    subtext="Business Dollar ofrece uno de los tipos de cambio más competitivos del mercado digital. Sin comisiones, 100% online, regulado por la SBS."
+    ctaLabel="Abrir cuenta gratis"
+    ctaHref="https://app.business-dollar.pe/register"
+    variant="primary"
+  />
+</PageLayout>
+
+<!-- Client-side fetch del tipo de cambio BCRP -->
+<script>
+  (async function fetchTipoCambio() {
+    // Calcular fechas: últimos 5 días para asegurarnos de tener el dato más reciente
+    const today = new Date();
+    const from = new Date(today);
+    from.setDate(from.getDate() - 7);
+
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const fmtBCRP = (d: Date) =>
+      `${pad(d.getDate())}${["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"][d.getMonth()]}${d.getFullYear()}`;
+
+    const fechaIni = fmtBCRP(from);
+    const fechaFin = fmtBCRP(today);
+
+    // PD04638PD = compra, PD04640PD = venta
+    const url = `https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04638PD-PD04640PD/json/${fechaIni}/${fechaFin}/es`;
+
+    const dotEl = document.getElementById("tc-dot");
+    const statusEl = document.getElementById("tc-status-text");
+    const compraEl = document.getElementById("tc-compra");
+    const ventaEl = document.getElementById("tc-venta");
+    const fechaEl = document.getElementById("tc-fecha");
+    const fallbackEl = document.getElementById("tc-fallback");
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+
+      // Buscar el último período con valores válidos
+      const periods: Array<{ name: string; values: string[] }> = data.periods ?? [];
+      let compra: string | null = null;
+      let venta: string | null = null;
+      let fecha: string | null = null;
+
+      for (let i = periods.length - 1; i >= 0; i--) {
+        const p = periods[i];
+        const c = p.values[0];
+        const v = p.values[1];
+        if (c && c !== "n.d." && v && v !== "n.d.") {
+          compra = parseFloat(c).toFixed(3);
+          venta = parseFloat(v).toFixed(3);
+          fecha = p.name;
+          break;
+        }
+      }
+
+      if (compra && venta && compraEl && ventaEl && fechaEl && dotEl && statusEl) {
+        compraEl.textContent = compra;
+        ventaEl.textContent = venta;
+        fechaEl.textContent = `Fecha: ${fecha ?? "hoy"}`;
+        dotEl.classList.replace("bg-neutral-600", "bg-green-500");
+        statusEl.textContent = "Actualizado";
+      } else {
+        throw new Error("No data");
+      }
+    } catch {
+      // Mostrar fallback
+      if (fallbackEl) fallbackEl.classList.remove("hidden");
+      if (compraEl) compraEl.textContent = "—";
+      if (ventaEl) ventaEl.textContent = "—";
+      if (dotEl) {
+        dotEl.classList.remove("bg-neutral-600");
+        dotEl.classList.add("bg-red-400");
+      }
+      if (statusEl) statusEl.textContent = "Sin conexión";
+    }
+  })();
+</script>

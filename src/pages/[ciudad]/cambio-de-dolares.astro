@@ -1,0 +1,291 @@
+---
+/**
+ * [ciudad]/cambio-de-dolares.astro
+ * Páginas programáticas de SEO local — una por ciudad/localidad.
+ * URL: /[ciudad]/cambio-de-dolares
+ * Schema: LocalBusiness con areaServed, address, serviceType.
+ * Referencia: docs/context/project-roadmap.md → Fase 4
+ *             docs/patterns/architecture.md → Localidades
+ */
+
+import { getCollection } from "astro:content";
+import PageLayout from "../../layouts/PageLayout.astro";
+import { company, bankPartners } from "../../data/company";
+import Button from "../../components/atoms/Button.astro";
+import YMYLDisclaimer from "../../components/sections/YMYLDisclaimer.astro";
+import StepItem from "../../components/molecules/StepItem.astro";
+import CTASection from "../../components/sections/CTASection.astro";
+
+export async function getStaticPaths() {
+  const localidades = await getCollection("localidades");
+  return localidades.map((entry) => ({
+    params: { ciudad: entry.data.slug },
+    props: { localidad: entry },
+  }));
+}
+
+const { localidad } = Astro.props;
+const { ciudad, slug, departamento, description, seoTitle, seoDescription, distritos, referencia } =
+  localidad.data;
+
+const canonicalUrl = `${company.url}/${slug}/cambio-de-dolares`;
+
+const localBusinessSchema = {
+  "@type": "LocalBusiness",
+  "@id": canonicalUrl,
+  name: `Business Dollar — Cambio de Dólares en ${ciudad}`,
+  description: description,
+  url: canonicalUrl,
+  image: `${company.url}/og-default.jpg`,
+  telephone: company.phone,
+  email: company.email,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: ciudad,
+    addressRegion: departamento,
+    addressCountry: "PE",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    addressCountry: "PE",
+  },
+  areaServed: distritos.map((d: string) => ({
+    "@type": "City",
+    name: d,
+  })),
+  serviceType: "Cambio de divisas online",
+  priceRange: "$$",
+  openingHours: "Mo-Fr 09:00-18:00",
+  sameAs: [company.url],
+  provider: {
+    "@type": "Organization",
+    name: company.name,
+    url: company.url,
+  },
+};
+
+const howItWorksSteps = [
+  {
+    number: "1",
+    title: "Crea tu cuenta",
+    description: "Regístrate en menos de 5 minutos con tu DNI. Sin papeles ni colas.",
+  },
+  {
+    number: "2",
+    title: "Elige el monto",
+    description: "Ingresa cuántos dólares o soles quieres cambiar y confirma el tipo de cambio.",
+  },
+  {
+    number: "3",
+    title: "Transfiere desde tu banco",
+    description: `Envía desde tu cuenta en ${bankPartners.join(", ")} u otro banco peruano.`,
+  },
+  {
+    number: "4",
+    title: "Recibe tu dinero",
+    description: "Acreditamos en tu cuenta el mismo día hábil. Sin comisiones ocultas.",
+  },
+];
+
+const breadcrumbs = [
+  { label: ciudad, href: `/${slug}/cambio-de-dolares` },
+  { label: "Cambio de Dólares", href: `/${slug}/cambio-de-dolares` },
+];
+---
+
+<PageLayout
+  title={seoTitle}
+  description={seoDescription}
+  canonicalUrl={canonicalUrl}
+  schema={localBusinessSchema}
+  breadcrumbs={breadcrumbs}
+>
+  <!-- YMYL Disclaimer -->
+  <YMYLDisclaimer />
+
+  <!-- Hero Section -->
+  <section class="bg-white border-b border-neutral-100 py-16 md:py-20" aria-labelledby="localidad-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            {ciudad}, {departamento}
+          </div>
+          <h1 id="localidad-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-6 leading-tight">
+            Cambio de Dólares en {ciudad}
+          </h1>
+          <p class="text-xl text-neutral-600 leading-relaxed mb-4">
+            {description}
+          </p>
+          <p class="text-sm text-neutral-500 mb-8 italic">
+            {referencia}
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <Button href="https://app.business-dollar.pe/register" variant="primary" size="md" target="_blank">
+              Cambiar dólares ahora
+            </Button>
+            <Button href="#como-funciona" variant="outline" size="md">
+              Cómo funciona
+            </Button>
+          </div>
+        </div>
+
+        <!-- Trust card -->
+        <div class="bg-neutral-50 rounded-2xl border border-neutral-200 p-8">
+          <p class="text-sm font-semibold text-neutral-700 mb-6">Por qué elegir Business Dollar en {ciudad}</p>
+          <ul class="space-y-4">
+            {[
+              { icon: "shield", text: "Regulado por la SBS — operación 100% legal" },
+              { icon: "zap", text: "Tipo de cambio superior al bancario" },
+              { icon: "clock", text: "Acreditación el mismo día hábil" },
+              { icon: "lock", text: "Plataforma con cifrado HTTPS y 2FA" },
+              { icon: "banknote", text: "Sin comisiones ocultas de ningún tipo" },
+              { icon: "smartphone", text: "Opera desde tu celular o computadora" },
+            ].map((item) => (
+              <li class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0 mt-0.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="text-sm text-neutral-600">{item.text}</span>
+              </li>
+            ))}
+          </ul>
+          <div class="mt-6 pt-6 border-t border-neutral-200">
+            <p class="text-xs text-neutral-500">Compatible con:</p>
+            <div class="flex flex-wrap gap-2 mt-2">
+              {bankPartners.map((bank) => (
+                <span class="text-xs font-medium bg-white border border-neutral-200 text-neutral-600 px-3 py-1 rounded-full">
+                  {bank}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section id="como-funciona" class="py-16 bg-neutral-50" aria-labelledby="pasos-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 id="pasos-heading" class="font-display text-3xl font-bold text-neutral-900 mb-3">
+          Cómo cambiar dólares desde {ciudad}
+        </h2>
+        <p class="text-neutral-600 max-w-2xl mx-auto">
+          Proceso 100% digital en 4 pasos. Sin visitar ninguna oficina, sin colas.
+        </p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {howItWorksSteps.map((step) => (
+          <StepItem
+            n={step.number}
+            title={step.title}
+            body={step.description}
+            icon=""
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Distritos cubiertos -->
+  {distritos.length > 0 && (
+    <section class="py-16 bg-white" aria-labelledby="distritos-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <h2 id="distritos-heading" class="font-display text-2xl font-bold text-neutral-900 mb-4">
+            Servicio disponible en toda {ciudad}
+          </h2>
+          <p class="text-neutral-600 mb-8">
+            Business Dollar es un servicio 100% online — puedes operar desde cualquier distrito de {ciudad} y {departamento} sin restricciones de ubicación.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            {distritos.map((distrito: string) => (
+              <span class="inline-flex items-center gap-1.5 bg-primary-50 text-primary-700 text-sm font-medium px-3 py-1.5 rounded-full border border-primary-100">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                {distrito}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- EEAT / Regulación -->
+  <section class="py-14 bg-neutral-50 border-y border-neutral-200" aria-labelledby="seguridad-local-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-3 gap-8 text-center">
+        <div>
+          <div class="text-3xl font-bold text-primary-600 mb-1">SBS</div>
+          <p class="text-sm font-semibold text-neutral-700 mb-1">Regulado y supervisado</p>
+          <p class="text-xs text-neutral-500">Operamos bajo la supervisión de la Superintendencia de Banca, Seguros y AFP del Perú.</p>
+        </div>
+        <div>
+          <div class="text-3xl font-bold text-primary-600 mb-1">100%</div>
+          <p class="text-sm font-semibold text-neutral-700 mb-1">Digital y sin papeles</p>
+          <p class="text-xs text-neutral-500">Todo el proceso de cambio de dólares se realiza online, incluyendo el KYC y la verificación de identidad.</p>
+        </div>
+        <div>
+          <div class="text-3xl font-bold text-primary-600 mb-1">4</div>
+          <p class="text-sm font-semibold text-neutral-700 mb-1">Bancos asociados</p>
+          <p class="text-xs text-neutral-500">Trabajamos con {bankPartners.join(", ")} para garantizar transferencias rápidas y seguras.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Internal links / Related content -->
+  <section class="py-16 bg-white" aria-labelledby="recursos-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="recursos-heading" class="font-display text-2xl font-bold text-neutral-900 mb-8">
+        Recursos útiles para operar en {ciudad}
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-5">
+        <a
+          href="/servicios"
+          class="group bg-neutral-50 rounded-xl border border-neutral-200 p-6 hover:border-primary-300 hover:bg-primary-50/30 transition-colors"
+        >
+          <p class="text-sm font-semibold text-neutral-500 mb-2 uppercase tracking-wide">Plataforma</p>
+          <h3 class="font-semibold text-neutral-900 group-hover:text-primary-700 mb-2 transition-colors">
+            Cómo funciona Business Dollar
+          </h3>
+          <p class="text-sm text-neutral-600">Conoce todos los servicios: compra y venta de dólares, límites y bancos compatibles.</p>
+          <span class="text-xs font-semibold text-primary-600 mt-3 inline-block">Ver servicios →</span>
+        </a>
+        <a
+          href="/seguridad"
+          class="group bg-neutral-50 rounded-xl border border-neutral-200 p-6 hover:border-primary-300 hover:bg-primary-50/30 transition-colors"
+        >
+          <p class="text-sm font-semibold text-neutral-500 mb-2 uppercase tracking-wide">Seguridad</p>
+          <h3 class="font-semibold text-neutral-900 group-hover:text-primary-700 mb-2 transition-colors">
+            Cómo protegemos tu dinero
+          </h3>
+          <p class="text-sm text-neutral-600">Conoce los protocolos de seguridad: cifrado, 2FA, cumplimiento SBS y más.</p>
+          <span class="text-xs font-semibold text-primary-600 mt-3 inline-block">Ver seguridad →</span>
+        </a>
+        <a
+          href="/blog/como-cambiar-dolares-online"
+          class="group bg-neutral-50 rounded-xl border border-neutral-200 p-6 hover:border-primary-300 hover:bg-primary-50/30 transition-colors"
+        >
+          <p class="text-sm font-semibold text-neutral-500 mb-2 uppercase tracking-wide">Guía</p>
+          <h3 class="font-semibold text-neutral-900 group-hover:text-primary-700 mb-2 transition-colors">
+            Guía completa: cambio de dólares online
+          </h3>
+          <p class="text-sm text-neutral-600">Aprende paso a paso cómo cambiar dólares por internet de forma segura en Perú.</p>
+          <span class="text-xs font-semibold text-primary-600 mt-3 inline-block">Leer guía →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <CTASection
+    heading={`Empieza a cambiar dólares en ${ciudad} hoy`}
+    subtext="Regístrate en menos de 5 minutos y realiza tu primera operación con el mejor tipo de cambio del mercado. Sin colas, sin comisiones."
+    ctaLabel="Abrir cuenta gratis"
+    ctaHref="https://app.business-dollar.pe/register"
+    variant="primary"
+    note={`Supervisado por la SBS · RUC ${company.ruc} · Sin comisiones ocultas`}
+  />
+</PageLayout>

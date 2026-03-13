@@ -1,0 +1,485 @@
+---
+/**
+ * calculadora-tipo-de-cambio.astro
+ * Calculadora interactiva de tipo de cambio USD/PEN.
+ * - Fetch client-side a la API del BCRP para obtener TC actualizado
+ * - Input: monto + dirección (PEN→USD o USD→PEN)
+ * - Output: resultado con BD + comparación vs banca típica (~3.5% spread)
+ * - YMYL disclaimer obligatorio
+ * Schema: FinancialService + BreadcrumbList
+ * Referencia: docs/context/project-roadmap.md → ad-hoc improvements (Bloque C)
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+import { company } from "../data/company";
+import YMYLDisclaimer from "../components/sections/YMYLDisclaimer.astro";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FinancialService",
+      name: "Calculadora de Tipo de Cambio USD/PEN — Business Dollar",
+      description:
+        "Calcula cuántos soles o dólares recibirías con Business Dollar. Compara con el spread bancario típico. Datos del BCRP actualizados.",
+      url: "https://business-dollar.pe/calculadora-tipo-de-cambio",
+      provider: {
+        "@type": "Organization",
+        name: company.name,
+        url: company.url,
+      },
+      areaServed: { "@type": "Country", name: "Perú" },
+      currenciesAccepted: "PEN, USD",
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Inicio", item: "https://business-dollar.pe/" },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Calculadora de Tipo de Cambio",
+          item: "https://business-dollar.pe/calculadora-tipo-de-cambio",
+        },
+      ],
+    },
+  ],
+};
+---
+
+<PageLayout
+  title="Calculadora de Tipo de Cambio USD/PEN — Gratis | Business Dollar"
+  description="Calcula cuántos soles o dólares recibirías con Business Dollar. Compara con el spread bancario. Tipo de cambio actualizado en tiempo real con datos oficiales del BCRP."
+  schema={schema}
+  breadcrumbs={[{ label: "Calculadora de Tipo de Cambio", href: "/calculadora-tipo-de-cambio" }]}
+>
+  <YMYLDisclaimer message="Los resultados son aproximados basados en el TC del BCRP. El tipo de cambio real de tu operación en Business Dollar se confirma al iniciarla. El ahorro vs banca es estimado." />
+
+  <!-- Hero -->
+  <section class="bg-white border-b border-neutral-100 py-12 md:py-16" aria-labelledby="calc-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-primary-700 bg-primary-50 border border-primary-200 px-3 py-1 rounded-full mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden="true"></span>
+        TC actualizado — BCRP
+      </span>
+      <h1 id="calc-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-4">
+        Calculadora de<br />tipo de cambio
+      </h1>
+      <p class="text-lg text-neutral-600 leading-relaxed">
+        Descubre cuánto recibirías con Business Dollar y compara con el spread típico de los bancos.
+      </p>
+    </div>
+  </section>
+
+  <!-- Calculadora -->
+  <section class="py-12 bg-neutral-50" aria-labelledby="calculadora-section">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="calculadora-section" class="sr-only">Calculadora interactiva</h2>
+
+      <div class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden">
+
+        <!-- Estado del TC -->
+        <div class="bg-neutral-900 px-6 py-4 flex items-center justify-between" aria-live="polite">
+          <div class="flex items-center gap-2">
+            <span class="text-xl" aria-hidden="true">💵</span>
+            <div>
+              <p class="text-white font-semibold text-sm">Tipo de cambio BCRP</p>
+              <p class="text-neutral-400 text-xs" id="calc-tc-info">Cargando...</p>
+            </div>
+          </div>
+          <div id="calc-status-badge" class="flex items-center gap-1.5 text-xs text-neutral-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-neutral-600" id="calc-dot" aria-hidden="true"></span>
+            <span id="calc-status-text">—</span>
+          </div>
+        </div>
+
+        <!-- Formulario -->
+        <div class="p-6 space-y-5">
+
+          <!-- Dirección -->
+          <div>
+            <label class="block text-sm font-semibold text-neutral-700 mb-2">Operación</label>
+            <div class="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Dirección de cambio">
+              <label class="relative cursor-pointer" id="label-pen-usd">
+                <input
+                  type="radio"
+                  name="direccion"
+                  value="pen-usd"
+                  id="dir-pen-usd"
+                  class="sr-only peer"
+                  checked
+                />
+                <div class="w-full px-4 py-3 rounded-xl border-2 border-neutral-200 peer-checked:border-primary-500 peer-checked:bg-primary-50 transition-colors text-center cursor-pointer hover:border-neutral-300">
+                  <p class="text-lg mb-0.5" aria-hidden="true">🇵🇪 → 🇺🇸</p>
+                  <p class="text-sm font-semibold text-neutral-800 peer-checked:text-primary-700">Soles → Dólares</p>
+                  <p class="text-xs text-neutral-500">Comprar USD</p>
+                </div>
+              </label>
+              <label class="relative cursor-pointer" id="label-usd-pen">
+                <input
+                  type="radio"
+                  name="direccion"
+                  value="usd-pen"
+                  id="dir-usd-pen"
+                  class="sr-only peer"
+                />
+                <div class="w-full px-4 py-3 rounded-xl border-2 border-neutral-200 peer-checked:border-red-400 peer-checked:bg-red-50 transition-colors text-center cursor-pointer hover:border-neutral-300">
+                  <p class="text-lg mb-0.5" aria-hidden="true">🇺🇸 → 🇵🇪</p>
+                  <p class="text-sm font-semibold text-neutral-800">Dólares → Soles</p>
+                  <p class="text-xs text-neutral-500">Vender USD</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Monto -->
+          <div>
+            <label for="monto-input" class="block text-sm font-semibold text-neutral-700 mb-2">
+              Monto a cambiar
+            </label>
+            <div class="relative">
+              <span
+                id="monto-prefix"
+                class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-neutral-500 select-none"
+                aria-hidden="true"
+              >S/</span>
+              <input
+                type="number"
+                id="monto-input"
+                min="0"
+                step="any"
+                placeholder="0.00"
+                class="w-full pl-12 pr-4 py-4 text-2xl font-bold text-neutral-900 border-2 border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 tabular-nums"
+                aria-label="Monto a cambiar"
+              />
+            </div>
+            <p class="text-xs text-neutral-400 mt-1.5">Monto mínimo: S/ 180 ≈ $50 USD</p>
+          </div>
+
+          <!-- Botón calcular -->
+          <button
+            id="btn-calcular"
+            type="button"
+            class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 text-base"
+          >
+            Calcular
+          </button>
+        </div>
+
+        <!-- Resultados (ocultos hasta calcular) -->
+        <div id="calc-results" class="hidden border-t border-neutral-100 px-6 pb-6 pt-5 space-y-4" aria-live="polite" aria-label="Resultados del cálculo">
+
+          <!-- Resultado Business Dollar -->
+          <div class="bg-primary-50 rounded-xl border-2 border-primary-200 p-5">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary-500" aria-hidden="true"></span>
+                <p class="text-sm font-bold text-primary-800">Con Business Dollar</p>
+              </div>
+              <span class="text-xs font-semibold text-primary-600 bg-primary-100 px-2 py-0.5 rounded-full">Recomendado</span>
+            </div>
+            <p class="font-display text-3xl font-bold text-primary-700 tabular-nums mb-1" id="result-bd">—</p>
+            <p class="text-xs text-primary-600" id="result-bd-tc">TC: —</p>
+          </div>
+
+          <!-- Resultado Banco típico -->
+          <div class="bg-neutral-50 rounded-xl border border-neutral-200 p-5">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-neutral-400" aria-hidden="true"></span>
+              <p class="text-sm font-semibold text-neutral-600">Banco típico (estimado)</p>
+            </div>
+            <p class="font-display text-3xl font-bold text-neutral-500 tabular-nums mb-1" id="result-banco">—</p>
+            <p class="text-xs text-neutral-400" id="result-banco-tc">TC: — (spread ~3.5%)</p>
+          </div>
+
+          <!-- Ahorro -->
+          <div class="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-5 py-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600 shrink-0" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div>
+              <p class="text-sm font-bold text-green-800">Ahorro estimado con Business Dollar</p>
+              <p class="text-xl font-bold text-green-700 tabular-nums" id="result-ahorro">—</p>
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <p class="text-xs text-neutral-400 leading-relaxed text-center">
+            Cálculo estimado basado en el TC del BCRP. El TC real de tu operación se confirma al iniciarla en Business Dollar. El ahorro vs banca es una estimación con spread del 3.5%.
+          </p>
+
+          <!-- CTA -->
+          <a
+            href="https://app.business-dollar.pe/register"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          >
+            Iniciar operación ahora →
+          </a>
+        </div>
+
+        <!-- Fallback sin TC -->
+        <div id="calc-fallback" class="hidden border-t border-amber-200 bg-amber-50 px-6 py-4 text-center">
+          <p class="text-sm text-amber-700 mb-3">
+            No se pudo cargar el tipo de cambio del BCRP. Ingresa el tipo de cambio manualmente o consulta directamente en la app.
+          </p>
+          <div class="flex items-center gap-3 max-w-xs mx-auto mb-3">
+            <label for="tc-manual" class="text-xs font-semibold text-amber-800 whitespace-nowrap">TC manual:</label>
+            <input
+              id="tc-manual"
+              type="number"
+              min="1"
+              step="0.001"
+              placeholder="3.750"
+              class="w-full px-3 py-2 text-sm border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
+              aria-label="Tipo de cambio manual"
+            />
+          </div>
+          <button
+            id="btn-usar-manual"
+            type="button"
+            class="text-xs font-semibold text-primary-600 hover:text-primary-700 underline"
+          >
+            Usar este TC y calcular
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Info fuente -->
+      <p class="text-xs text-neutral-400 text-center mt-4">
+        Tipo de cambio obtenido de la
+        <a href="https://estadisticas.bcrp.gob.pe" target="_blank" rel="noopener noreferrer" class="underline hover:text-neutral-600">API pública del BCRP</a>.
+        Datos de libre acceso según normativa del Banco Central de Reserva del Perú.
+      </p>
+    </div>
+  </section>
+
+  <!-- Info adicional -->
+  <section class="py-14 bg-white" aria-labelledby="info-calc-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="info-calc-heading" class="font-display text-2xl font-bold text-neutral-900 mb-6 text-center">
+        ¿Cómo funciona la calculadora?
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-5">
+        {[
+          {
+            step: "1",
+            title: "Obtenemos el TC del BCRP",
+            desc: "Al cargar la página, consultamos la API pública del Banco Central de Reserva del Perú para obtener el tipo de cambio oficial más reciente.",
+          },
+          {
+            step: "2",
+            title: "Calculamos los resultados",
+            desc: "Aplicamos el TC de Business Dollar (basado en el BCRP) y lo comparamos con un spread bancario típico del 3.5% para mostrarte el ahorro estimado.",
+          },
+          {
+            step: "3",
+            title: "Valores referenciales",
+            desc: "El resultado es una estimación. El tipo de cambio final de tu operación se confirma al crearla en nuestra plataforma. Siempre es competitivo.",
+          },
+        ].map((item) => (
+          <div class="text-center">
+            <div class="w-10 h-10 rounded-full bg-primary-100 text-primary-700 font-bold text-lg flex items-center justify-center mx-auto mb-3">
+              {item.step}
+            </div>
+            <h3 class="font-semibold text-neutral-800 text-sm mb-2">{item.title}</h3>
+            <p class="text-xs text-neutral-500 leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Links internos -->
+  <section class="py-10 bg-neutral-50 border-t border-neutral-100" aria-labelledby="relacionados-calc-heading">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="relacionados-calc-heading" class="font-display text-base font-bold text-neutral-700 mb-4">
+        También te puede interesar
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <a href="/tipo-de-cambio" class="group p-4 rounded-xl border border-neutral-200 bg-white hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Tipo de cambio hoy</p>
+          <p class="text-xs text-neutral-500">USD/PEN en tiempo real</p>
+        </a>
+        <a href="/servicios" class="group p-4 rounded-xl border border-neutral-200 bg-white hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Nuestros servicios</p>
+          <p class="text-xs text-neutral-500">Compra y venta de dólares online</p>
+        </a>
+        <a href="/preguntas-frecuentes" class="group p-4 rounded-xl border border-neutral-200 bg-white hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Preguntas frecuentes</p>
+          <p class="text-xs text-neutral-500">Resuelve tus dudas sobre el cambio</p>
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<!-- Lógica interactiva de la calculadora -->
+<script>
+  // ─── Estado global ────────────────────────────────────────────────────────
+  let tcCompra: number | null = null; // Soles por 1 USD (cuánto pagas por USD)
+  let tcVenta: number | null = null;  // Soles por 1 USD (cuánto recibes por USD)
+  const SPREAD_BANCO = 0.035;         // Spread estimado de la banca típica
+
+  // ─── Referencias DOM ──────────────────────────────────────────────────────
+  const dotEl       = document.getElementById("calc-dot") as HTMLElement;
+  const statusEl    = document.getElementById("calc-status-text") as HTMLElement;
+  const tcInfoEl    = document.getElementById("calc-tc-info") as HTMLElement;
+  const montoInput  = document.getElementById("monto-input") as HTMLInputElement;
+  const montoPrefix = document.getElementById("monto-prefix") as HTMLElement;
+  const btnCalc     = document.getElementById("btn-calcular") as HTMLButtonElement;
+  const resultsEl   = document.getElementById("calc-results") as HTMLElement;
+  const fallbackEl  = document.getElementById("calc-fallback") as HTMLElement;
+  const tcManualEl  = document.getElementById("tc-manual") as HTMLInputElement;
+  const btnManual   = document.getElementById("btn-usar-manual") as HTMLButtonElement;
+  const resultBd    = document.getElementById("result-bd") as HTMLElement;
+  const resultBdTc  = document.getElementById("result-bd-tc") as HTMLElement;
+  const resultBanco = document.getElementById("result-banco") as HTMLElement;
+  const resultBancoTc = document.getElementById("result-banco-tc") as HTMLElement;
+  const resultAhorro = document.getElementById("result-ahorro") as HTMLElement;
+
+  // ─── Dirección seleccionada ───────────────────────────────────────────────
+  function getDireccion(): "pen-usd" | "usd-pen" {
+    const r = document.querySelector<HTMLInputElement>('input[name="direccion"]:checked');
+    return (r?.value ?? "pen-usd") as "pen-usd" | "usd-pen";
+  }
+
+  // ─── Actualizar prefijo del input según dirección ─────────────────────────
+  function updatePrefix() {
+    const dir = getDireccion();
+    if (montoPrefix) {
+      montoPrefix.textContent = dir === "pen-usd" ? "S/" : "$";
+    }
+    resultsEl?.classList.add("hidden");
+  }
+
+  document.querySelectorAll<HTMLInputElement>('input[name="direccion"]').forEach((radio) => {
+    radio.addEventListener("change", updatePrefix);
+  });
+
+  // ─── Fetch BCRP ───────────────────────────────────────────────────────────
+  async function fetchTipoCambio() {
+    const today = new Date();
+    const from = new Date(today);
+    from.setDate(from.getDate() - 7);
+
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+    const fmtBCRP = (d: Date) => `${pad(d.getDate())}${meses[d.getMonth()]}${d.getFullYear()}`;
+
+    const url = `https://estadisticas.bcrp.gob.pe/estadisticas/series/api/PD04638PD-PD04640PD/json/${fmtBCRP(from)}/${fmtBCRP(today)}/es`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const periods: Array<{ name: string; values: string[] }> = data.periods ?? [];
+
+      for (let i = periods.length - 1; i >= 0; i--) {
+        const p = periods[i];
+        const c = p.values[0];
+        const v = p.values[1];
+        if (c && c !== "n.d." && v && v !== "n.d.") {
+          tcCompra = parseFloat(c);
+          tcVenta  = parseFloat(v);
+
+          dotEl?.classList.replace("bg-neutral-600", "bg-green-500");
+          if (statusEl) statusEl.textContent = "Actualizado";
+          if (tcInfoEl) tcInfoEl.textContent = `Compra: ${tcCompra.toFixed(3)} | Venta: ${tcVenta.toFixed(3)} · ${p.name}`;
+          return;
+        }
+      }
+      throw new Error("No data");
+    } catch {
+      if (fallbackEl) fallbackEl.classList.remove("hidden");
+      dotEl?.classList.replace("bg-neutral-600", "bg-red-400");
+      if (statusEl) statusEl.textContent = "Sin conexión";
+      if (tcInfoEl) tcInfoEl.textContent = "No se pudo obtener el TC del BCRP";
+    }
+  }
+
+  // ─── Formatear moneda ─────────────────────────────────────────────────────
+  function fmt(amount: number, currency: "PEN" | "USD"): string {
+    return new Intl.NumberFormat("es-PE", {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  }
+
+  // ─── Calcular ─────────────────────────────────────────────────────────────
+  function calcular(overrideTc?: number) {
+    const dir   = getDireccion();
+    const monto = parseFloat(montoInput?.value ?? "0");
+
+    if (!monto || monto <= 0) {
+      montoInput?.focus();
+      return;
+    }
+
+    let bdResult: number;
+    let bancoResult: number;
+    let bdTcStr: string;
+    let bancoTcStr: string;
+    let ahorroResult: number;
+    let ahorroCurrency: "PEN" | "USD";
+
+    // Usamos TC compra para PEN→USD, venta para USD→PEN
+    const tcBd = overrideTc ?? (dir === "pen-usd" ? tcCompra : tcVenta);
+    if (!tcBd) return;
+
+    if (dir === "pen-usd") {
+      // PEN → USD: usuario entrega soles, recibe dólares
+      // BD: monto / tcCompra
+      // Banco: tiene spread más alto → cobran más soles por dólar
+      const tcBanco = tcBd * (1 + SPREAD_BANCO);
+      bdResult    = monto / tcBd;
+      bancoResult = monto / tcBanco;
+      ahorroResult = bdResult - bancoResult; // más USD con BD
+      ahorroCurrency = "USD";
+      bdTcStr    = `TC compra: ${tcBd.toFixed(3)}`;
+      bancoTcStr = `TC banco estimado: ${tcBanco.toFixed(3)} (spread ~3.5%)`;
+    } else {
+      // USD → PEN: usuario entrega dólares, recibe soles
+      // BD: monto * tcVenta
+      // Banco: pagan menos soles por dólar → TC menor para el usuario
+      const tcBanco = tcBd * (1 - SPREAD_BANCO);
+      bdResult    = monto * tcBd;
+      bancoResult = monto * tcBanco;
+      ahorroResult = bdResult - bancoResult; // más PEN con BD
+      ahorroCurrency = "PEN";
+      bdTcStr    = `TC venta: ${tcBd.toFixed(3)}`;
+      bancoTcStr = `TC banco estimado: ${tcBanco.toFixed(3)} (spread ~3.5%)`;
+    }
+
+    const outputCurrency: "PEN" | "USD" = dir === "pen-usd" ? "USD" : "PEN";
+
+    if (resultBd)     resultBd.textContent     = fmt(bdResult, outputCurrency);
+    if (resultBdTc)   resultBdTc.textContent   = bdTcStr;
+    if (resultBanco)  resultBanco.textContent  = fmt(bancoResult, outputCurrency);
+    if (resultBancoTc) resultBancoTc.textContent = bancoTcStr;
+    if (resultAhorro) resultAhorro.textContent = `+${fmt(ahorroResult, ahorroCurrency)}`;
+
+    resultsEl?.classList.remove("hidden");
+    resultsEl?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  // ─── Event listeners ──────────────────────────────────────────────────────
+  btnCalc?.addEventListener("click", () => calcular());
+
+  montoInput?.addEventListener("keydown", (e) => {
+    if ((e as KeyboardEvent).key === "Enter") calcular();
+  });
+
+  btnManual?.addEventListener("click", () => {
+    const manual = parseFloat(tcManualEl?.value ?? "0");
+    if (manual > 0) {
+      tcCompra = manual;
+      tcVenta  = manual;
+      calcular(manual);
+    }
+  });
+
+  // ─── Init ─────────────────────────────────────────────────────────────────
+  fetchTipoCambio();
+</script>

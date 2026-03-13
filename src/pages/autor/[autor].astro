@@ -1,0 +1,216 @@
+---
+/**
+ * autor/[autor].astro — Author profile pages
+ * Displays author bio, credentials, and list of articles by that author.
+ * Injects Person Schema.org JSON-LD.
+ * Referencia: docs/patterns/seo-rules.md → "Página de autor" → Person Schema
+ * Referencia: docs/context/project-roadmap.md → Fase 3
+ */
+import { getCollection } from "astro:content";
+import PageLayout from "../../layouts/PageLayout.astro";
+import Button from "../../components/atoms/Button.astro";
+
+export async function getStaticPaths() {
+  const authors = await getCollection("authors");
+  return authors.map((author) => ({
+    params: { autor: author.id },
+    props: { author },
+  }));
+}
+
+const { author } = Astro.props;
+
+// Fetch posts by this author, newest first
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const authorPosts = allPosts
+  .filter((p) => p.data.author === author.id)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+function getSlug(id: string) {
+  return id.split("/").pop() ?? id;
+}
+
+const categoryLabels: Record<string, string> = {
+  "tipo-de-cambio": "Tipo de Cambio",
+  guias: "Guías",
+  seguridad: "Seguridad",
+  finanzas: "Finanzas Personales",
+  noticias: "Noticias",
+};
+
+const dateFormatter = new Intl.DateTimeFormat("es-PE", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const canonicalUrl = `https://business-dollar.pe/autor/${author.id}`;
+
+// Person Schema
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: author.data.name,
+  jobTitle: author.data.role,
+  description: author.data.bio,
+  url: canonicalUrl,
+  ...(author.data.avatar ? { image: `https://business-dollar.pe${author.data.avatar}` } : {}),
+  ...(author.data.social?.linkedin ? { sameAs: [author.data.social.linkedin] } : {}),
+  worksFor: {
+    "@type": "Organization",
+    name: "Business Dollar",
+    url: "https://business-dollar.pe",
+  },
+};
+---
+
+<PageLayout
+  title={`${author.data.name} — Autor en Business Dollar`}
+  description={`Perfil de ${author.data.name}, ${author.data.role} en Business Dollar. ${author.data.bio.slice(0, 100)}...`}
+  canonicalUrl={canonicalUrl}
+  breadcrumbs={[
+    { label: "Blog", href: "/blog" },
+    { label: author.data.name, href: `/autor/${author.id}` },
+  ]}
+>
+  <!-- Person Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+  <!-- Author header -->
+  <section class="bg-white border-b border-neutral-100 py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Button href="/blog" variant="ghost" size="sm" class="mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        Blog
+      </Button>
+
+      <div class="flex items-start gap-6">
+        <!-- Avatar -->
+        {
+          author.data.avatar ? (
+            <img
+              src={author.data.avatar}
+              alt={`Foto de ${author.data.name}`}
+              width="96"
+              height="96"
+              class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover shrink-0 border-2 border-neutral-200"
+              loading="eager"
+            />
+          ) : (
+            <span
+              class="flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary-100 text-primary-700 text-3xl font-bold shrink-0"
+              aria-hidden="true"
+            >
+              {author.data.name.charAt(0)}
+            </span>
+          )
+        }
+
+        <div class="min-w-0">
+          <p class="text-sm font-semibold text-primary-600 uppercase tracking-wider mb-1">Autor</p>
+          <h1 class="font-display text-2xl md:text-3xl font-bold text-neutral-900 leading-tight mb-1">
+            {author.data.name}
+          </h1>
+          <p class="text-neutral-500 font-medium mb-3">{author.data.role}</p>
+          <p class="text-neutral-600 leading-relaxed max-w-2xl">{author.data.bio}</p>
+
+            {
+              author.data.social?.linkedin && (
+                <Button
+                  href={author.data.social.linkedin}
+                  variant="link"
+                  size="sm"
+                  target="_blank"
+                  class="mt-4"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                  Ver en LinkedIn
+                </Button>
+              )
+            }
+        </div>
+      </div>
+
+      <!-- Credentials -->
+      {
+        author.data.credentials && author.data.credentials.length > 0 && (
+          <div class="mt-8 rounded-xl border border-neutral-200 bg-neutral-50 p-6">
+            <p class="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4">
+              Formación y experiencia
+            </p>
+            <ul class="grid gap-2 sm:grid-cols-2">
+              {author.data.credentials.map((cred: string) => (
+                <li class="flex items-start gap-2 text-sm text-neutral-700">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="shrink-0 text-primary-500 mt-0.5"
+                    aria-hidden="true"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  {cred}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Author's articles -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="font-display text-xl font-bold text-neutral-900 mb-6">
+      Artículos de {author.data.name}
+      <span class="ml-2 text-sm font-normal text-neutral-400">
+        ({authorPosts.length} {authorPosts.length === 1 ? "artículo" : "artículos"})
+      </span>
+    </h2>
+
+    {
+      authorPosts.length === 0 ? (
+        <p class="text-neutral-500">Este autor no tiene artículos publicados aún.</p>
+      ) : (
+        <div class="grid gap-6 sm:grid-cols-2">
+          {authorPosts.map((post) => (
+            <article class="group relative flex flex-col rounded-xl border border-neutral-200 bg-white overflow-hidden hover:shadow-md transition-shadow duration-200">
+              <div class="flex-1 p-6">
+                <a
+                  href={`/blog/categoria/${post.data.category}`}
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors duration-150 mb-3"
+                >
+                  {categoryLabels[post.data.category] ?? post.data.category}
+                </a>
+                <h3 class="font-display text-base font-bold text-neutral-900 leading-snug mb-2 group-hover:text-primary-700 transition-colors duration-150">
+                  <a href={`/blog/${getSlug(post.id)}`} class="after:absolute after:inset-0">
+                    {post.data.title}
+                  </a>
+                </h3>
+                <p class="text-sm text-neutral-500 line-clamp-2 leading-relaxed">
+                  {post.data.description}
+                </p>
+              </div>
+              <div class="px-6 pb-5 flex items-center justify-between text-xs text-neutral-400 border-t border-neutral-100 pt-3 mt-auto">
+                <time datetime={post.data.publishDate.toISOString()}>
+                  {dateFormatter.format(post.data.publishDate)}
+                </time>
+                <span class="flex items-center gap-1 text-primary-600 font-medium group-hover:gap-2 transition-all duration-150">
+                  Leer
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</PageLayout>

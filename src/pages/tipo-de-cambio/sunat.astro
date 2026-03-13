@@ -1,0 +1,228 @@
+---
+/**
+ * tipo-de-cambio/sunat.astro
+ * Spoke 1 del cluster "Tipo de cambio".
+ * Guía educativa: qué es el TC SUNAT, cuándo usarlo, diferencia con el TC de mercado.
+ * Keyword principal: "tipo de cambio SUNAT"
+ * Schema: WebPage + BreadcrumbList
+ * Referencia: docs/context/project-roadmap.md → ad-hoc improvements (Bloque B)
+ */
+import PageLayout from "../../layouts/PageLayout.astro";
+import { company } from "../../data/company";
+import YMYLDisclaimer from "../../components/sections/YMYLDisclaimer.astro";
+import Button from "../../components/atoms/Button.astro";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      name: "Tipo de Cambio SUNAT — ¿Qué es y cuándo usarlo?",
+      description:
+        "Guía completa sobre el tipo de cambio SUNAT en Perú. Qué es, para qué sirve, cómo se calcula y cuándo debes utilizarlo en tus declaraciones de impuestos.",
+      url: "https://business-dollar.pe/tipo-de-cambio/sunat",
+      publisher: {
+        "@type": "Organization",
+        name: company.name,
+        url: company.url,
+      },
+      breadcrumb: {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Inicio", item: "https://business-dollar.pe/" },
+          { "@type": "ListItem", position: 2, name: "Tipo de Cambio", item: "https://business-dollar.pe/tipo-de-cambio" },
+          { "@type": "ListItem", position: 3, name: "Tipo de Cambio SUNAT", item: "https://business-dollar.pe/tipo-de-cambio/sunat" },
+        ],
+      },
+    },
+  ],
+};
+---
+
+<PageLayout
+  title="Tipo de Cambio SUNAT Perú — ¿Qué es y cuándo usarlo? | Business Dollar"
+  description="Guía completa sobre el tipo de cambio SUNAT en Perú. Aprende qué es, cómo se calcula, para qué se usa en declaraciones tributarias y cuál es su diferencia con el TC de mercado."
+  schema={schema}
+  breadcrumbs={[
+    { label: "Tipo de Cambio", href: "/tipo-de-cambio" },
+    { label: "Tipo de Cambio SUNAT", href: "/tipo-de-cambio/sunat" },
+  ]}
+>
+  <YMYLDisclaimer message="Este contenido es educativo y referencial. Para asesoría tributaria específica, consulta con un contador o con la SUNAT directamente." />
+
+  <!-- Hero -->
+  <section class="bg-white border-b border-neutral-100 py-14 md:py-20" aria-labelledby="sunat-heading">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <span class="text-sm font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">
+          Guía tributaria
+        </span>
+      </div>
+      <h1 id="sunat-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-5 leading-tight">
+        Tipo de cambio SUNAT<br />en Perú
+      </h1>
+      <p class="text-xl text-neutral-600 leading-relaxed mb-6 max-w-3xl">
+        El tipo de cambio SUNAT es el valor oficial que la Superintendencia Nacional de Aduanas y de Administración Tributaria publica para que empresas y personas naturales conviertan montos en dólares a soles en sus declaraciones de impuestos.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <Button href="/tipo-de-cambio" variant="outline" size="md">
+          ← Ver TC en tiempo real
+        </Button>
+        <Button href="/calculadora-tipo-de-cambio" variant="primary" size="md">
+          Usar calculadora de cambio
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenido principal -->
+  <section class="py-16 bg-neutral-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="prose-like space-y-12">
+
+        <!-- ¿Qué es el TC SUNAT? -->
+        <div class="bg-white rounded-2xl border border-neutral-200 p-8">
+          <h2 class="font-display text-2xl font-bold text-neutral-900 mb-4">¿Qué es el tipo de cambio SUNAT?</h2>
+          <p class="text-neutral-600 leading-relaxed mb-4">
+            La SUNAT (Superintendencia Nacional de Aduanas y de Administración Tributaria) publica periódicamente un tipo de cambio oficial que debe utilizarse exclusivamente para efectos <strong class="text-neutral-800">tributarios y aduaneros</strong> en el Perú.
+          </p>
+          <p class="text-neutral-600 leading-relaxed mb-4">
+            Este tipo de cambio se calcula en base al promedio ponderado de las operaciones del mercado cambiario, siguiendo los lineamientos establecidos por la propia SUNAT y el Decreto Supremo correspondiente.
+          </p>
+          <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-4">
+            <p class="text-sm font-semibold text-blue-800 mb-1">Punto clave</p>
+            <p class="text-sm text-blue-700">
+              El TC SUNAT <strong>no es el mismo</strong> que el tipo de cambio del mercado (BCRP). Puede haber diferencias, ya que el TC SUNAT se publica con menor frecuencia y responde a una metodología específica de promediación.
+            </p>
+          </div>
+        </div>
+
+        <!-- ¿Para qué se usa? -->
+        <div class="bg-white rounded-2xl border border-neutral-200 p-8">
+          <h2 class="font-display text-2xl font-bold text-neutral-900 mb-5">¿Cuándo y para qué se usa el TC SUNAT?</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {[
+              {
+                icon: "📄",
+                title: "Declaración de renta",
+                desc: "Al convertir ingresos, gastos o activos en dólares a soles para la declaración anual del Impuesto a la Renta.",
+              },
+              {
+                icon: "🧾",
+                title: "Facturación en moneda extranjera",
+                desc: "Cuando una empresa emite comprobantes de pago en dólares, debe consignar el equivalente en soles usando el TC SUNAT vigente.",
+              },
+              {
+                icon: "📦",
+                title: "Declaraciones aduaneras",
+                desc: "Para calcular el valor en soles de mercancías importadas o exportadas denominadas en divisas.",
+              },
+              {
+                icon: "📊",
+                title: "Registros contables",
+                desc: "Las empresas con operaciones en moneda extranjera usan el TC SUNAT para registrar ajustes por diferencia de cambio según la normativa contable tributaria.",
+              },
+            ].map((item) => (
+              <div class="flex gap-3 p-4 bg-neutral-50 rounded-xl">
+                <span class="text-2xl shrink-0" aria-hidden="true">{item.icon}</span>
+                <div>
+                  <p class="font-semibold text-neutral-800 text-sm mb-1">{item.title}</p>
+                  <p class="text-xs text-neutral-600 leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Diferencia TC SUNAT vs mercado -->
+        <div class="bg-white rounded-2xl border border-neutral-200 p-8">
+          <h2 class="font-display text-2xl font-bold text-neutral-900 mb-5">
+            TC SUNAT vs tipo de cambio de mercado
+          </h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead>
+                <tr class="border-b border-neutral-200">
+                  <th scope="col" class="py-3 text-left font-semibold text-neutral-700 pr-4">Característica</th>
+                  <th scope="col" class="py-3 text-left font-semibold text-blue-700 pr-4">TC SUNAT</th>
+                  <th scope="col" class="py-3 text-left font-semibold text-neutral-700">TC de mercado (BCRP)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-neutral-100">
+                <tr>
+                  <td class="py-3 text-neutral-600 pr-4">Propósito</td>
+                  <td class="py-3 text-blue-700 font-medium pr-4">Tributario / aduanero</td>
+                  <td class="py-3 text-neutral-600">Referencia del mercado financiero</td>
+                </tr>
+                <tr>
+                  <td class="py-3 text-neutral-600 pr-4">Frecuencia</td>
+                  <td class="py-3 text-blue-700 font-medium pr-4">Mensual (cierre de mes anterior)</td>
+                  <td class="py-3 text-neutral-600">Diario (días hábiles)</td>
+                </tr>
+                <tr>
+                  <td class="py-3 text-neutral-600 pr-4">Publicado por</td>
+                  <td class="py-3 text-blue-700 font-medium pr-4">SUNAT</td>
+                  <td class="py-3 text-neutral-600">BCRP</td>
+                </tr>
+                <tr>
+                  <td class="py-3 text-neutral-600 pr-4">¿Se puede operar?</td>
+                  <td class="py-3 text-neutral-500 pr-4">No — solo referencial</td>
+                  <td class="py-3 text-neutral-500">No directamente (referencia)</td>
+                </tr>
+                <tr>
+                  <td class="py-3 text-neutral-600 pr-4">¿Obliga su uso?</td>
+                  <td class="py-3 text-blue-700 font-medium pr-4">Sí, para efectos tributarios</td>
+                  <td class="py-3 text-neutral-600">No (salvo norma específica)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TC SUNAT vs cambio real -->
+        <div class="bg-white rounded-2xl border border-neutral-200 p-8">
+          <h2 class="font-display text-2xl font-bold text-neutral-900 mb-4">
+            ¿Debo usar el TC SUNAT para cambiar dólares?
+          </h2>
+          <p class="text-neutral-600 leading-relaxed mb-4">
+            <strong class="text-neutral-800">No.</strong> El tipo de cambio SUNAT es exclusivamente para fines tributarios y contables. Cuando necesitas <em>cambiar dólares a soles</em> (o viceversa), el tipo de cambio que se aplica es el que fija la plataforma o entidad donde operas.
+          </p>
+          <p class="text-neutral-600 leading-relaxed mb-6">
+            En Business Dollar, el tipo de cambio que recibirás es competitivo respecto al mercado y se confirma al momento de iniciar tu operación, lo que te permite cambiar al mejor valor disponible en ese instante.
+          </p>
+          <Button href="https://app.business-dollar.pe/register" variant="primary" size="md" target="_blank">
+            Cambiar dólares ahora
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </Button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Links internos -->
+  <section class="py-12 bg-white border-t border-neutral-100" aria-labelledby="relacionados-sunat-heading">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="relacionados-sunat-heading" class="font-display text-lg font-bold text-neutral-900 mb-5">
+        También te puede interesar
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <a href="/tipo-de-cambio" class="group p-4 rounded-xl border border-neutral-200 hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Tipo de cambio hoy</p>
+          <p class="text-xs text-neutral-500">USD/PEN en tiempo real con datos del BCRP</p>
+        </a>
+        <a href="/tipo-de-cambio/sbs" class="group p-4 rounded-xl border border-neutral-200 hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Tipo de cambio SBS</p>
+          <p class="text-xs text-neutral-500">TC publicado por la Superintendencia de Banca</p>
+        </a>
+        <a href="/servicios" class="group p-4 rounded-xl border border-neutral-200 hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Servicios Business Dollar</p>
+          <p class="text-xs text-neutral-500">Compra y venta de dólares online</p>
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>

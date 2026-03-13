@@ -1,0 +1,259 @@
+---
+/**
+ * tipo-de-cambio/sbs.astro
+ * Spoke 2 del cluster "Tipo de cambio".
+ * Guía educativa: qué es el TC SBS, cómo opera, diferencia con mercado,
+ * y cómo Business Dollar opera bajo supervisión SBS.
+ * Keyword principal: "tipo de cambio SBS"
+ * Schema: WebPage + BreadcrumbList
+ * Referencia: docs/context/project-roadmap.md → ad-hoc improvements (Bloque B)
+ */
+import PageLayout from "../../layouts/PageLayout.astro";
+import { company } from "../../data/company";
+import YMYLDisclaimer from "../../components/sections/YMYLDisclaimer.astro";
+import CTASection from "../../components/sections/CTASection.astro";
+import SBSBadge from "../../components/atoms/SBSBadge.astro";
+import Button from "../../components/atoms/Button.astro";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      name: "Tipo de Cambio SBS — Superintendencia de Banca, Seguros y AFP",
+      description:
+        "Guía sobre el tipo de cambio publicado por la SBS en Perú. Qué es, cómo se calcula, para qué sirve y cómo Business Dollar opera bajo supervisión de la Superintendencia de Banca.",
+      url: "https://business-dollar.pe/tipo-de-cambio/sbs",
+      publisher: {
+        "@type": "Organization",
+        name: company.name,
+        url: company.url,
+      },
+      breadcrumb: {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Inicio", item: "https://business-dollar.pe/" },
+          { "@type": "ListItem", position: 2, name: "Tipo de Cambio", item: "https://business-dollar.pe/tipo-de-cambio" },
+          { "@type": "ListItem", position: 3, name: "Tipo de Cambio SBS", item: "https://business-dollar.pe/tipo-de-cambio/sbs" },
+        ],
+      },
+    },
+  ],
+};
+---
+
+<PageLayout
+  title="Tipo de Cambio SBS Perú — Superintendencia de Banca | Business Dollar"
+  description="Conoce el tipo de cambio publicado por la SBS (Superintendencia de Banca, Seguros y AFP) en Perú. Cómo se calcula, para qué sirve y por qué Business Dollar opera bajo su supervisión."
+  schema={schema}
+  breadcrumbs={[
+    { label: "Tipo de Cambio", href: "/tipo-de-cambio" },
+    { label: "Tipo de Cambio SBS", href: "/tipo-de-cambio/sbs" },
+  ]}
+>
+  <YMYLDisclaimer message="Este contenido es educativo. Los valores de tipo de cambio son referenciales y varían constantemente. Verifica siempre con la fuente oficial antes de tomar decisiones financieras." />
+
+  <!-- Hero -->
+  <section class="bg-white border-b border-neutral-100 py-14 md:py-20" aria-labelledby="sbs-heading">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+        </div>
+        <span class="text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+          Regulación financiera
+        </span>
+      </div>
+      <h1 id="sbs-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-5 leading-tight">
+        Tipo de cambio SBS<br />en Perú
+      </h1>
+      <p class="text-xl text-neutral-600 leading-relaxed mb-6 max-w-3xl">
+        La Superintendencia de Banca, Seguros y AFP (SBS) publica diariamente el tipo de cambio promedio del sistema financiero supervisado. Es el referente oficial para bancos, cajas y entidades reguladas en el país.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <Button href="/tipo-de-cambio" variant="outline" size="md">
+          ← Ver TC en tiempo real
+        </Button>
+        <Button href="/seguridad" variant="outline" size="md">
+          Seguridad y regulación →
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenido principal -->
+  <section class="py-16 bg-neutral-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+
+      <!-- ¿Qué es la SBS? -->
+      <div class="bg-white rounded-2xl border border-neutral-200 p-8">
+        <h2 class="font-display text-2xl font-bold text-neutral-900 mb-4">¿Qué es la SBS y por qué importa?</h2>
+        <p class="text-neutral-600 leading-relaxed mb-4">
+          La <strong class="text-neutral-800">Superintendencia de Banca, Seguros y AFP (SBS)</strong> es el organismo del Estado peruano responsable de regular y supervisar los sistemas financiero, de seguros y del sistema privado de pensiones.
+        </p>
+        <p class="text-neutral-600 leading-relaxed mb-4">
+          Su función es proteger los intereses del público, la estabilidad del sistema y la confianza de los usuarios en las entidades financieras. Toda empresa que opera con dinero de terceros en el sistema financiero peruano debe contar con autorización y estar bajo supervisión de la SBS.
+        </p>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mt-2">
+          <div class="flex items-start gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600 shrink-0 mt-0.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+            <div>
+              <p class="text-sm font-semibold text-emerald-800 mb-1">Business Dollar está regulado por la SBS</p>
+              <p class="text-sm text-emerald-700">
+                Operamos con autorización y bajo supervisión directa de la Superintendencia de Banca, Seguros y AFP del Perú (Registro SBS N.° {company.sbsRegistro}). Esto garantiza que tus fondos y operaciones están respaldados por el marco regulatorio más estricto del país.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ¿Qué es el TC SBS? -->
+      <div class="bg-white rounded-2xl border border-neutral-200 p-8">
+        <h2 class="font-display text-2xl font-bold text-neutral-900 mb-4">¿Qué es el tipo de cambio SBS?</h2>
+        <p class="text-neutral-600 leading-relaxed mb-4">
+          El tipo de cambio SBS es el <strong class="text-neutral-800">promedio ponderado de los tipos de cambio</strong> reportados por las empresas del sistema financiero supervisado (bancos, financieras, cajas municipales y rurales, EDPYMES) al cierre del día hábil.
+        </p>
+        <p class="text-neutral-600 leading-relaxed mb-4">
+          Se publica todos los días hábiles y sirve como referencia del sistema financiero formal. Es distinto al tipo de cambio del mercado libre o al tipo de cambio que ofrecen las casas de cambio digitales como Business Dollar.
+        </p>
+        <div class="grid sm:grid-cols-2 gap-4 mt-4">
+          {[
+            { label: "Publicado por", value: "SBS" },
+            { label: "Frecuencia", value: "Diario (días hábiles)" },
+            { label: "Basado en", value: "Promedio del sistema financiero supervisado" },
+            { label: "Uso principal", value: "Referencia para entidades reguladas" },
+          ].map((item) => (
+            <div class="bg-neutral-50 rounded-lg px-4 py-3">
+              <p class="text-xs text-neutral-500 mb-0.5">{item.label}</p>
+              <p class="text-sm font-semibold text-neutral-800">{item.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Diferencia TC SBS vs mercado -->
+      <div class="bg-white rounded-2xl border border-neutral-200 p-8">
+        <h2 class="font-display text-2xl font-bold text-neutral-900 mb-5">
+          TC SBS vs tipo de cambio de mercado
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="border-b border-neutral-200">
+                <th scope="col" class="py-3 text-left font-semibold text-neutral-700 pr-4 w-1/3">Característica</th>
+                <th scope="col" class="py-3 text-left font-semibold text-emerald-700 pr-4">TC SBS</th>
+                <th scope="col" class="py-3 text-left font-semibold text-primary-700">Business Dollar</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-100">
+              <tr>
+                <td class="py-3 text-neutral-600 pr-4">Propósito</td>
+                <td class="py-3 text-neutral-600 pr-4">Referencia del sistema financiero supervisado</td>
+                <td class="py-3 text-primary-700 font-medium">Cambio de divisas online para personas</td>
+              </tr>
+              <tr>
+                <td class="py-3 text-neutral-600 pr-4">Spread típico</td>
+                <td class="py-3 text-neutral-600 pr-4">Promedio de bancos (~3-5%)</td>
+                <td class="py-3 text-primary-700 font-medium">Competitivo (mejor que bancos)</td>
+              </tr>
+              <tr>
+                <td class="py-3 text-neutral-600 pr-4">¿Puedo operar con él?</td>
+                <td class="py-3 text-neutral-500 pr-4">No directamente</td>
+                <td class="py-3 text-primary-700 font-medium">Sí — 100% online, en minutos</td>
+              </tr>
+              <tr>
+                <td class="py-3 text-neutral-600 pr-4">Regulación</td>
+                <td class="py-3 text-neutral-600 pr-4">Publicado por la SBS</td>
+                <td class="py-3 text-primary-700 font-medium">Empresa supervisada por la SBS</td>
+              </tr>
+              <tr>
+                <td class="py-3 text-neutral-600 pr-4">Comisiones</td>
+                <td class="py-3 text-neutral-500 pr-4">—</td>
+                <td class="py-3 text-primary-700 font-medium">Sin comisiones de plataforma</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Por qué la regulación SBS importa -->
+      <div class="bg-white rounded-2xl border border-neutral-200 p-8">
+        <h2 class="font-display text-2xl font-bold text-neutral-900 mb-5">
+          ¿Por qué importa operar con una empresa regulada por la SBS?
+        </h2>
+        <div class="space-y-4">
+          {[
+            {
+              title: "Protección de fondos",
+              desc: "Las empresas reguladas deben cumplir con requisitos de capital, provisiones y controles internos que protegen los fondos de los usuarios.",
+            },
+            {
+              title: "Transparencia en el tipo de cambio",
+              desc: "La SBS exige que las entidades supervisadas publiquen sus tipos de cambio de compra y venta de forma clara y accesible.",
+            },
+            {
+              title: "Canal formal antilavado",
+              desc: "Operar con una empresa registrada en la SBS garantiza que tus operaciones pasan por los controles AML (Anti-Money Laundering) exigidos por ley.",
+            },
+            {
+              title: "Recurso ante el regulador",
+              desc: "Si tienes un problema con la empresa, puedes presentar una queja o reclamo ante la SBS, que actúa como árbitro imparcial.",
+            },
+          ].map((item) => (
+            <div class="flex gap-4 items-start">
+              <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div>
+                <p class="font-semibold text-neutral-800 text-sm mb-1">{item.title}</p>
+                <p class="text-sm text-neutral-600 leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-6 border-t border-neutral-100 pt-6">
+          <Button href="/seguridad" variant="link" size="md">
+            Conoce más sobre la seguridad en Business Dollar
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </Button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <CTASection
+    heading="Opera con la tranquilidad de la regulación"
+    subtext="Business Dollar es una casa de cambio digital autorizada y supervisada por la SBS. Cambia dólares con seguridad, transparencia y el mejor tipo de cambio del mercado digital."
+    ctaLabel="Abrir cuenta gratis"
+    ctaHref="https://app.business-dollar.pe/register"
+    ctaSecondary={{ label: "Conocer Business Dollar", href: "/sobre-nosotros" }}
+    variant="dark"
+  >
+    <SBSBadge variant="dark" slot="above" />
+  </CTASection>
+
+  <!-- Links internos -->
+  <section class="py-12 bg-white border-t border-neutral-100" aria-labelledby="relacionados-sbs-heading">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="relacionados-sbs-heading" class="font-display text-lg font-bold text-neutral-900 mb-5">
+        También te puede interesar
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <a href="/tipo-de-cambio" class="group p-4 rounded-xl border border-neutral-200 hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Tipo de cambio hoy</p>
+          <p class="text-xs text-neutral-500">USD/PEN en tiempo real con datos del BCRP</p>
+        </a>
+        <a href="/tipo-de-cambio/sunat" class="group p-4 rounded-xl border border-neutral-200 hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Tipo de cambio SUNAT</p>
+          <p class="text-xs text-neutral-500">TC oficial para declaraciones tributarias</p>
+        </a>
+        <a href="/seguridad" class="group p-4 rounded-xl border border-neutral-200 hover:border-primary-300 hover:bg-primary-50/30 transition-colors">
+          <p class="text-sm font-semibold text-neutral-800 group-hover:text-primary-700 mb-1">Seguridad y regulación</p>
+          <p class="text-xs text-neutral-500">Cómo protegemos tu dinero en Business Dollar</p>
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>
