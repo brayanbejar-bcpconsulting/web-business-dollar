@@ -2,12 +2,18 @@
 /**
  * index.astro — Home
  * Página principal de Business Dollar.
- * Secciones: Hero, Tipo de cambio (placeholder), Cómo funciona, Confianza, Testimonios, CTA final.
+ * Secciones: Hero, Stats, Cómo funciona, Confianza, Testimonios, CTA final.
  * Schema: FinancialService + Organization + WebSite (vía SchemaOrg global)
  * Referencia: docs/context/project-roadmap.md → Fase 2.1
  * Referencia: docs/context/business-logic.md → Propuesta de Valor
  */
 import PageLayout from "../layouts/PageLayout.astro";
+import Button from "../components/atoms/Button.astro";
+import FeatureGrid from "../components/sections/FeatureGrid.astro";
+import CTASection from "../components/sections/CTASection.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
+import StepItem from "../components/molecules/StepItem.astro";
+import TestimonialCard from "../components/molecules/TestimonialCard.astro";
 import { bankPartners } from "../data/company";
 
 const financialServiceSchema = {
@@ -123,13 +129,12 @@ const testimonials = [
   hideBreadcrumbs={true}
 >
   <!-- ═══════════════════════════════════════════════════════
-       SECCIÓN 1: HERO
+       SECCIÓN 1: HERO — mantener inline (gradient bg único + widget)
   ═══════════════════════════════════════════════════════ -->
   <section
     class="relative bg-gradient-to-br from-white via-primary-50 to-white overflow-hidden"
     aria-labelledby="hero-heading"
   >
-    <!-- Decorative background shapes -->
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
       <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary-100/40 blur-3xl"></div>
       <div class="absolute top-1/2 -left-16 w-64 h-64 rounded-full bg-primary-50/60 blur-2xl"></div>
@@ -137,9 +142,7 @@ const testimonials = [
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
       <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        <!-- Left: copy -->
         <div>
-          <!-- Trust badge -->
           <div class="inline-flex items-center gap-2 bg-primary-50 border border-primary-200 text-primary-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
             Regulado por la SBS del Perú
@@ -158,24 +161,13 @@ const testimonials = [
           </p>
 
           <div class="flex flex-col sm:flex-row gap-3 mb-8">
-            <a
-              href="https://app.business-dollar.pe/register"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-7 py-3.5 rounded-xl text-base transition-all duration-200 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 shadow-sm hover:shadow-md"
-            >
+            <Button href="https://app.business-dollar.pe/register" variant="primary" size="lg" target="_blank">
               Abrir cuenta gratis
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-            <a
-              href="/servicios"
-              class="inline-flex items-center justify-center gap-2 border-2 border-neutral-200 hover:border-neutral-300 text-neutral-700 hover:text-neutral-900 font-semibold px-7 py-3.5 rounded-xl text-base transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2"
-            >
-              Conocer más
-            </a>
+            </Button>
+            <Button href="/servicios" variant="outline" size="lg">Conocer más</Button>
           </div>
 
-          <!-- Bank logos -->
           <div>
             <p class="text-xs text-neutral-500 mb-3 font-medium">Compatible con todos los bancos del Perú:</p>
             <div class="flex flex-wrap gap-2">
@@ -191,7 +183,7 @@ const testimonials = [
           </div>
         </div>
 
-        <!-- Right: exchange rate widget placeholder -->
+        <!-- Right: exchange rate widget -->
         <div class="lg:justify-self-end w-full max-w-sm mx-auto lg:mx-0">
           <div class="bg-white rounded-2xl shadow-xl border border-neutral-100 p-6">
             <div class="flex items-center justify-between mb-5">
@@ -223,14 +215,9 @@ const testimonials = [
               Tipo de cambio referencial. El tipo exacto se confirma al iniciar la operación.
             </p>
 
-            <a
-              href="https://app.business-dollar.pe/register"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-xl text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-            >
+            <Button href="https://app.business-dollar.pe/register" variant="primary" size="md" target="_blank" class="w-full justify-center">
               Iniciar operación
-            </a>
+            </Button>
           </div>
         </div>
       </div>
@@ -238,7 +225,7 @@ const testimonials = [
   </section>
 
   <!-- ═══════════════════════════════════════════════════════
-       SECCIÓN 2: STATS / PRUEBA SOCIAL
+       SECCIÓN 2: STATS
   ═══════════════════════════════════════════════════════ -->
   <section class="bg-neutral-900 py-12" aria-label="Cifras de Business Dollar">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -256,47 +243,24 @@ const testimonials = [
   <!-- ═══════════════════════════════════════════════════════
        SECCIÓN 3: CÓMO FUNCIONA
   ═══════════════════════════════════════════════════════ -->
-  <section
-    class="py-20 md:py-28 bg-white"
-    aria-labelledby="como-funciona-heading"
-  >
+  <section class="py-20 md:py-28 bg-white" aria-labelledby="como-funciona-heading">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14">
-        <h2
-          id="como-funciona-heading"
-          class="font-display text-3xl md:text-4xl font-bold text-neutral-900 mb-4"
-        >
-          ¿Cómo cambiar dólares online?
-        </h2>
-        <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-          Cambia tu dinero en 4 simples pasos. Sin formularios complicados, sin visitas a una sucursal.
-        </p>
-      </div>
+      <SectionHeader
+        heading="¿Cómo cambiar dólares online?"
+        subtext="Cambia tu dinero en 4 simples pasos. Sin formularios complicados, sin visitas a una sucursal."
+        id="como-funciona-heading"
+      />
 
       <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8" role="list">
         {steps.map((step) => (
-          <li class="relative flex flex-col items-center text-center group">
-            <div class="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-50 border-2 border-primary-100 text-primary-600 mb-4 group-hover:bg-primary-100 transition-colors duration-200">
-              <Fragment set:html={step.icon} />
-            </div>
-            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center lg:static lg:mb-2 lg:w-auto lg:h-auto lg:rounded-none lg:bg-transparent lg:text-primary-600 lg:text-sm lg:font-semibold">
-              {step.n}
-            </span>
-            <h3 class="font-semibold text-neutral-900 mb-2">{step.title}</h3>
-            <p class="text-sm text-neutral-600 leading-relaxed">{step.body}</p>
-          </li>
+          <StepItem n={step.n} title={step.title} body={step.body} icon={step.icon} />
         ))}
       </ol>
 
       <div class="text-center mt-12">
-        <a
-          href="https://app.business-dollar.pe/register"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3.5 rounded-xl transition-all duration-200 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
-        >
+        <Button href="https://app.business-dollar.pe/register" variant="primary" size="lg" target="_blank">
           Empezar ahora — es gratis
-        </a>
+        </Button>
         <p class="text-xs text-neutral-400 mt-3">Sin tarjeta de crédito. Sin compromisos.</p>
       </div>
     </div>
@@ -305,37 +269,19 @@ const testimonials = [
   <!-- ═══════════════════════════════════════════════════════
        SECCIÓN 4: CONFIANZA / TRUST
   ═══════════════════════════════════════════════════════ -->
-  <section
-    class="py-20 md:py-28 bg-neutral-50"
-    aria-labelledby="confianza-heading"
-  >
+  <FeatureGrid
+    items={benefits}
+    cols={3}
+    heading="¿Por qué elegir Business Dollar?"
+    subtext="Más de 10,000 personas y empresas ya confían en nosotros para sus operaciones de cambio de divisas."
+    bg="bg-neutral-50"
+    sectionId="confianza-heading"
+  />
+
+  <!-- Trust strip inline (SBS + bancos) -->
+  <div class="bg-neutral-50 pb-20 md:pb-28">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14">
-        <h2
-          id="confianza-heading"
-          class="font-display text-3xl md:text-4xl font-bold text-neutral-900 mb-4"
-        >
-          ¿Por qué elegir Business Dollar?
-        </h2>
-        <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-          Más de 10,000 personas y empresas ya confían en nosotros para sus operaciones de cambio de divisas.
-        </p>
-      </div>
-
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {benefits.map((b) => (
-          <div class="bg-white rounded-xl p-6 border border-neutral-200 hover:border-primary-200 hover:shadow-md transition-all duration-200 group">
-            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-50 text-primary-600 mb-4 group-hover:bg-primary-100 transition-colors duration-200">
-              <Fragment set:html={b.icon} />
-            </div>
-            <h3 class="font-semibold text-neutral-900 mb-2">{b.title}</h3>
-            <p class="text-sm text-neutral-600 leading-relaxed">{b.body}</p>
-          </div>
-        ))}
-      </div>
-
-      <!-- SBS + Banks trust strip -->
-      <div class="mt-14 rounded-2xl bg-white border border-neutral-200 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="rounded-2xl bg-white border border-neutral-200 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="flex items-center gap-3">
           <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-50 text-primary-600 shrink-0">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
@@ -364,50 +310,27 @@ const testimonials = [
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════
        SECCIÓN 5: TESTIMONIOS
   ═══════════════════════════════════════════════════════ -->
-  <section
-    class="py-20 md:py-28 bg-white"
-    aria-labelledby="testimonios-heading"
-  >
+  <section class="py-20 md:py-28 bg-white" aria-labelledby="testimonios-heading">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14">
-        <h2
-          id="testimonios-heading"
-          class="font-display text-3xl md:text-4xl font-bold text-neutral-900 mb-4"
-        >
-          Lo que dicen nuestros clientes
-        </h2>
-        <p class="text-lg text-neutral-600 max-w-xl mx-auto">
-          Miles de peruanos ya cambian sus dólares con Business Dollar. Esto es lo que opinan.
-        </p>
-      </div>
-
+      <SectionHeader
+        heading="Lo que dicen nuestros clientes"
+        subtext="Miles de peruanos ya cambian sus dólares con Business Dollar. Esto es lo que opinan."
+        id="testimonios-heading"
+      />
       <div class="grid md:grid-cols-3 gap-6">
         {testimonials.map((t) => (
-          <figure class="bg-neutral-50 rounded-xl p-6 border border-neutral-200">
-            <!-- Stars -->
-            <div class="flex gap-0.5 mb-4" aria-label="5 estrellas">
-              {Array.from({ length: 5 }).map(() => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              ))}
-            </div>
-            <blockquote class="text-neutral-700 text-sm leading-relaxed mb-4">
-              "{t.quote}"
-            </blockquote>
-            <figcaption class="flex items-center gap-3">
-              <span class="flex items-center justify-center w-9 h-9 rounded-full bg-primary-100 text-primary-700 text-sm font-bold shrink-0" aria-hidden="true">
-                {t.initial}
-              </span>
-              <div>
-                <p class="text-sm font-semibold text-neutral-900">{t.name}</p>
-                <p class="text-xs text-neutral-500">{t.role}</p>
-              </div>
-            </figcaption>
-          </figure>
+          <TestimonialCard
+            quote={t.quote}
+            name={t.name}
+            role={t.role}
+            initial={t.initial}
+            stars={5}
+          />
         ))}
       </div>
     </div>
@@ -416,40 +339,13 @@ const testimonials = [
   <!-- ═══════════════════════════════════════════════════════
        SECCIÓN 6: CTA FINAL
   ═══════════════════════════════════════════════════════ -->
-  <section
-    class="py-20 md:py-28 bg-gradient-to-br from-primary-700 via-primary-600 to-primary-700"
-    aria-labelledby="cta-heading"
-  >
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2
-        id="cta-heading"
-        class="font-display text-3xl md:text-4xl font-bold text-white mb-4"
-      >
-        ¿Listo para cambiar dólares al mejor tipo de cambio?
-      </h2>
-      <p class="text-lg text-primary-100 mb-8 leading-relaxed">
-        Únete a miles de peruanos que ya ahorraron dinero con Business Dollar. Registrarse es gratis y toma menos de 5 minutos.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a
-          href="https://app.business-dollar.pe/register"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center gap-2 bg-white hover:bg-primary-50 text-primary-700 font-bold px-8 py-4 rounded-xl text-base transition-all duration-200 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary-600 shadow-lg"
-        >
-          Abrir cuenta gratis
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
-        <a
-          href="/preguntas-frecuentes"
-          class="inline-flex items-center justify-center gap-2 border-2 border-primary-400 hover:border-white text-white font-semibold px-8 py-4 rounded-xl text-base transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-        >
-          Ver preguntas frecuentes
-        </a>
-      </div>
-      <p class="text-xs text-primary-200 mt-5">
-        Regulado por la SBS del Perú · Sin comisiones ocultas · Acreditación el mismo día
-      </p>
-    </div>
-  </section>
+  <CTASection
+    variant="gradient"
+    heading="¿Listo para cambiar dólares al mejor tipo de cambio?"
+    subtext="Únete a miles de peruanos que ya ahorraron dinero con Business Dollar. Registrarse es gratis y toma menos de 5 minutos."
+    ctaLabel="Abrir cuenta gratis"
+    ctaHref="https://app.business-dollar.pe/register"
+    ctaSecondary={{ label: "Ver preguntas frecuentes", href: "/preguntas-frecuentes" }}
+    note="Regulado por la SBS del Perú · Sin comisiones ocultas · Acreditación el mismo día"
+  />
 </PageLayout>

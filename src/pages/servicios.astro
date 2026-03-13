@@ -6,6 +6,11 @@
  * Referencia: docs/context/project-roadmap.md → Fase 2.3
  */
 import PageLayout from "../layouts/PageLayout.astro";
+import Button from "../components/atoms/Button.astro";
+import YMYLDisclaimer from "../components/sections/YMYLDisclaimer.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import CTASection from "../components/sections/CTASection.astro";
+import FAQSection from "../components/sections/FAQSection.astro";
 import { bankPartners } from "../data/company";
 
 const financialServiceSchema = {
@@ -118,43 +123,15 @@ const faqs = [
   schema={financialServiceSchema}
   breadcrumbs={[{ label: "Servicios", href: "/servicios" }]}
 >
-  <!-- YMYL Disclaimer -->
-  <div class="bg-amber-50 border-b border-amber-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-xs text-amber-800">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-      <span><strong>Aviso:</strong> Business Dollar es una casa de cambio digital regulada por la SBS. El tipo de cambio varía constantemente. Los valores son referenciales y se confirman al iniciar la operación.</span>
-    </div>
-  </div>
+  <YMYLDisclaimer />
 
-  <!-- Hero -->
-  <section class="bg-white border-b border-neutral-100 py-16 md:py-20" aria-labelledby="servicios-heading">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl">
-        <h1 id="servicios-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-6">
-          Servicio de cambio de dólares online
-        </h1>
-        <p class="text-xl text-neutral-600 leading-relaxed mb-6">
-          Compra y vende dólares desde tu computadora o celular, al mejor tipo de cambio del mercado, sin comisiones y con la seguridad que te da operar con una empresa regulada por la SBS.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-3">
-          <a
-            href="https://app.business-dollar.pe/register"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
-          >
-            Iniciar operación
-          </a>
-          <a
-            href="#como-funciona"
-            class="inline-flex items-center justify-center gap-2 border-2 border-neutral-200 text-neutral-700 font-semibold px-6 py-3 rounded-xl hover:border-neutral-300 transition-colors duration-150"
-          >
-            Cómo funciona
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <PageHero
+    heading="Servicio de cambio de dólares online"
+    subheading="Compra y vende dólares desde tu computadora o celular, al mejor tipo de cambio del mercado, sin comisiones y con la seguridad que te da operar con una empresa regulada por la SBS."
+    align="left"
+    cta={{ label: "Iniciar operación", href: "https://app.business-dollar.pe/register", target: "_blank" }}
+    ctaSecondary={{ label: "Cómo funciona", href: "#como-funciona" }}
+  />
 
   <!-- Servicios principales -->
   <section class="py-16 bg-neutral-50" id="como-funciona" aria-labelledby="tipos-heading">
@@ -177,9 +154,9 @@ const faqs = [
             <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Sin comisiones de plataforma</li>
             <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Acreditación el mismo día hábil</li>
           </ul>
-          <a href="https://app.business-dollar.pe/register" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 hover:text-primary-700">
+          <Button href="https://app.business-dollar.pe/register" variant="link" target="_blank">
             Comprar dólares ahora →
-          </a>
+          </Button>
         </div>
 
         <!-- Vender dólares -->
@@ -196,9 +173,9 @@ const faqs = [
             <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Compatible con cuentas en dólares</li>
             <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Proceso 100% digital</li>
           </ul>
-          <a href="https://app.business-dollar.pe/register" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 hover:text-primary-700">
+          <Button href="https://app.business-dollar.pe/register" variant="link" target="_blank">
             Vender dólares ahora →
-          </a>
+          </Button>
         </div>
       </div>
 
@@ -206,9 +183,9 @@ const faqs = [
       <div id="calculadora" class="mt-8 max-w-4xl mx-auto bg-white rounded-xl border border-neutral-200 p-6 text-center">
         <p class="text-sm font-semibold text-neutral-700 mb-1">Calculadora de tipo de cambio</p>
         <p class="text-xs text-neutral-400 mb-4">Próximamente — disponible al iniciar sesión en la app</p>
-        <a href="https://app.business-dollar.pe/register" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors duration-150">
+        <Button href="https://app.business-dollar.pe/register" variant="primary" size="sm" target="_blank">
           Usar calculadora
-        </a>
+        </Button>
       </div>
     </div>
   </section>
@@ -258,48 +235,18 @@ const faqs = [
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="py-16 bg-neutral-50" aria-labelledby="faq-servicios-heading">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 id="faq-servicios-heading" class="font-display text-2xl font-bold text-neutral-900 mb-8 text-center">Preguntas frecuentes sobre nuestros servicios</h2>
-      <div class="space-y-4">
-        {faqs.map((faq) => (
-          <details class="group bg-white rounded-xl border border-neutral-200 overflow-hidden">
-            <summary class="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-neutral-900 hover:text-primary-600 transition-colors list-none">
-              {faq.q}
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 transition-transform duration-200 group-open:rotate-180" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-            </summary>
-            <div class="px-6 pb-5 text-sm text-neutral-600 leading-relaxed border-t border-neutral-100">
-              <p class="pt-4">{faq.a}</p>
-            </div>
-          </details>
-        ))}
-      </div>
-      <div class="mt-6 text-center">
-        <a href="/preguntas-frecuentes" class="text-sm font-semibold text-primary-600 hover:text-primary-700">
-          Ver todas las preguntas frecuentes →
-        </a>
-      </div>
-    </div>
-  </section>
+  <FAQSection
+    items={faqs.map((f) => ({ q: f.q, a: f.a }))}
+    heading="Preguntas frecuentes sobre nuestros servicios"
+    footerLink={{ label: "Ver todas las preguntas frecuentes →", href: "/preguntas-frecuentes" }}
+    bg="bg-neutral-50"
+  />
 
-  <!-- CTA -->
-  <section class="py-16 bg-primary-600" aria-labelledby="cta-servicios-heading">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 id="cta-servicios-heading" class="font-display text-2xl md:text-3xl font-bold text-white mb-4">
-        Empieza a cambiar dólares hoy
-      </h2>
-      <p class="text-primary-100 mb-7 leading-relaxed">
-        Regístrate en menos de 5 minutos y realiza tu primera operación con el mejor tipo de cambio del mercado.
-      </p>
-      <a
-        href="https://app.business-dollar.pe/register"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 bg-white text-primary-700 font-bold px-8 py-4 rounded-xl hover:bg-primary-50 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-      >
-        Abrir cuenta gratis
-      </a>
-    </div>
-  </section>
+  <CTASection
+    variant="primary"
+    heading="Empieza a cambiar dólares hoy"
+    subtext="Regístrate en menos de 5 minutos y realiza tu primera operación con el mejor tipo de cambio del mercado."
+    ctaLabel="Abrir cuenta gratis"
+    ctaHref="https://app.business-dollar.pe/register"
+  />
 </PageLayout>

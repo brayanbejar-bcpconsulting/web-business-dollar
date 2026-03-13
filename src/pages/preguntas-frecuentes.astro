@@ -7,6 +7,10 @@
  * Referencia: docs/patterns/seo-rules.md → FAQPage schema
  */
 import PageLayout from "../layouts/PageLayout.astro";
+import Button from "../components/atoms/Button.astro";
+import PageHero from "../components/sections/PageHero.astro";
+import FAQSection from "../components/sections/FAQSection.astro";
+import SectionHeader from "../components/sections/SectionHeader.astro";
 import { company } from "../data/company";
 
 const categories = [
@@ -147,68 +151,34 @@ const faqSchema = {
   schema={faqSchema}
   breadcrumbs={[{ label: "Preguntas frecuentes", href: "/preguntas-frecuentes" }]}
 >
-  <!-- Hero -->
-  <section class="bg-white border-b border-neutral-100 py-16 md:py-20" aria-labelledby="faq-heading">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl">
-        <h1 id="faq-heading" class="font-display text-4xl md:text-5xl font-bold text-neutral-900 mb-6">
-          Preguntas frecuentes
-        </h1>
-        <p class="text-xl text-neutral-600 leading-relaxed">
-          Todo lo que necesitas saber sobre cambiar dólares en Business Dollar. Si no encuentras respuesta a tu pregunta, <a href="/contacto" class="text-accent-600 hover:underline font-medium">contáctanos</a>.
-        </p>
-      </div>
-
-      <!-- Índice de categorías -->
-      <nav class="mt-10 flex flex-wrap gap-3" aria-label="Categorías de preguntas frecuentes">
-        {categories.map((cat) => (
-          <a
-            href={`#${cat.id}`}
-            class="inline-flex items-center gap-1.5 bg-neutral-100 hover:bg-primary-50 hover:text-primary-700 text-neutral-700 text-sm font-medium px-4 py-2 rounded-full transition-colors duration-150"
-          >
-            {cat.title}
-          </a>
-        ))}
-      </nav>
-    </div>
-  </section>
+  <PageHero
+    heading="Preguntas frecuentes"
+    subheading={`Todo lo que necesitas saber sobre cambiar dólares en Business Dollar. Si no encuentras respuesta a tu pregunta, <a href="/contacto" class="text-accent-600 hover:underline font-medium">contáctanos</a>.`}
+    align="left"
+  >
+    <!-- Índice de categorías -->
+    <nav class="mt-10 flex flex-wrap gap-3" aria-label="Categorías de preguntas frecuentes">
+      {categories.map((cat) => (
+        <a
+          href={`#${cat.id}`}
+          class="inline-flex items-center gap-1.5 bg-neutral-100 hover:bg-primary-50 hover:text-primary-700 text-neutral-700 text-sm font-medium px-4 py-2 rounded-full transition-colors duration-150"
+        >
+          {cat.title}
+        </a>
+      ))}
+    </nav>
+  </PageHero>
 
   <!-- FAQ por categorías -->
   <section class="py-16 bg-neutral-50">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
       {categories.map((cat) => (
-        <div id={cat.id}>
-          <h2 class="font-display text-2xl font-bold text-neutral-900 mb-6 pb-3 border-b border-neutral-200">
-            {cat.title}
-          </h2>
-          <div class="space-y-3">
-            {cat.questions.map((item) => (
-              <details class="group bg-white rounded-xl border border-neutral-200 hover:border-primary-200 transition-colors duration-150">
-                <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none font-semibold text-neutral-900 hover:text-primary-700">
-                  <span>{item.q}</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="shrink-0 transition-transform duration-200 group-open:rotate-180"
-                    aria-hidden="true"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </summary>
-                <div class="px-5 pb-5 pt-1 text-neutral-600 leading-relaxed text-sm">
-                  <Fragment set:html={item.a} />
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
+        <FAQSection
+          items={cat.questions.map((q) => ({ q: q.q, a: q.a }))}
+          heading={cat.title}
+          bg="bg-neutral-50"
+          id={cat.id}
+        />
       ))}
     </div>
   </section>
@@ -216,25 +186,14 @@ const faqSchema = {
   <!-- ¿Aún tienes dudas? -->
   <section class="py-16 bg-white border-t border-neutral-100" aria-labelledby="contacto-faq-heading">
     <div class="max-w-2xl mx-auto px-4 text-center">
-      <h2 id="contacto-faq-heading" class="font-display text-2xl font-bold text-neutral-900 mb-4">
-        ¿No encontraste lo que buscabas?
-      </h2>
-      <p class="text-neutral-600 mb-8">
-        Nuestro equipo está disponible de lunes a viernes de 9 a.m. a 6 p.m. para resolver cualquier duda.
-      </p>
+      <SectionHeader
+        heading="¿No encontraste lo que buscabas?"
+        subtext="Nuestro equipo está disponible de lunes a viernes de 9 a.m. a 6 p.m. para resolver cualquier duda."
+        id="contacto-faq-heading"
+      />
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="/contacto"
-          class="inline-flex items-center justify-center gap-2 bg-primary-600 text-white font-bold px-6 py-3 rounded-xl hover:bg-primary-700 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
-        >
-          Contactar soporte
-        </a>
-        <a
-          href={`mailto:${company.email}`}
-          class="inline-flex items-center justify-center gap-2 bg-white border border-neutral-200 text-neutral-700 font-semibold px-6 py-3 rounded-xl hover:border-primary-300 hover:text-primary-700 transition-colors duration-150"
-        >
-          {company.email}
-        </a>
+        <Button href="/contacto" variant="primary" size="md">Contactar soporte</Button>
+        <Button href={`mailto:${company.email}`} variant="outline" size="md">{company.email}</Button>
       </div>
     </div>
   </section>
