@@ -1,0 +1,61 @@
+---
+/**
+ * FAQSection.astro
+ * Section with optional heading + accordion FAQ items.
+ * Referencia: docs/patterns/design-system.md → "FAQ"
+ */
+
+import AccordionItem from "../molecules/AccordionItem.astro";
+
+interface FAQItem {
+  q: string;
+  a: string;
+}
+
+interface FooterLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  items: FAQItem[];
+  heading?: string;
+  footerLink?: FooterLink;
+  bg?: string;
+  id?: string;
+}
+
+const { items, heading, footerLink, bg = "bg-white", id } = Astro.props;
+---
+
+<section class={`${bg} py-16`} id={id} aria-labelledby={heading ? "faq-section-heading" : undefined}>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    {
+      heading && (
+        <h2
+          id="faq-section-heading"
+          class="font-display text-2xl md:text-3xl font-bold text-neutral-900 mb-8 text-center"
+        >
+          {heading}
+        </h2>
+      )
+    }
+
+    <div class="space-y-3">
+      {items.map((item) => <AccordionItem question={item.q} answer={item.a} />)}
+    </div>
+
+    {
+      footerLink && (
+        <div class="mt-8 text-center">
+          <a
+            href={footerLink.href}
+            class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors duration-150"
+          >
+            {footerLink.label} →
+          </a>
+        </div>
+      )
+    }
+  </div>
+</section>

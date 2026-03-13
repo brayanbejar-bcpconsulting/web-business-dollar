@@ -1,0 +1,108 @@
+---
+/**
+ * PageHero.astro
+ * Standard page hero with heading, subheading, optional badge, optional CTAs and a slot
+ * for additional content below the subheading (e.g. category nav, live-data badge).
+ *
+ * Variants:
+ *   align="left" (default) — max-w-3xl text left
+ *   align="center"         — max-w-3xl text center
+ *
+ * badge.variant:
+ *   "primary" — bg-primary-50 text-primary-700
+ *   "sbs"     — uses SBSBadge component
+ *
+ * Referencia: docs/patterns/design-system.md → "Page hero"
+ */
+
+import Button from "../atoms/Button.astro";
+import SBSBadge from "../atoms/SBSBadge.astro";
+
+interface BadgeConfig {
+  text?: string;
+  variant?: "primary" | "sbs";
+}
+
+interface CTAConfig {
+  label: string;
+  href: string;
+  target?: string;
+}
+
+interface Props {
+  heading: string;
+  subheading: string;
+  badge?: BadgeConfig;
+  align?: "left" | "center";
+  cta?: CTAConfig;
+  ctaSecondary?: CTAConfig;
+  bg?: string;
+}
+
+const {
+  heading,
+  subheading,
+  badge,
+  align = "left",
+  cta,
+  ctaSecondary,
+  bg = "bg-white border-b border-neutral-100",
+} = Astro.props;
+
+const containerAlign = align === "center" ? "max-w-3xl mx-auto text-center" : "max-w-3xl";
+---
+
+<section class={`${bg} py-16 md:py-20`} aria-labelledby="page-hero-heading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class={containerAlign}>
+      <!-- Badge -->
+      {
+        badge && (
+          badge.variant === "sbs" ? (
+            <div class="mb-4">
+              <SBSBadge variant="light" />
+            </div>
+          ) : (
+            <p class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+              {badge.text}
+            </p>
+          )
+        )
+      }
+
+      <!-- Heading -->
+      <h1
+        id="page-hero-heading"
+        class="font-display text-4xl md:text-5xl font-bold text-neutral-900 leading-tight mb-4"
+      >
+        {heading}
+      </h1>
+
+      <!-- Subheading -->
+      <p class="text-xl text-neutral-600 leading-relaxed mb-6">
+        {subheading}
+      </p>
+
+      <!-- Slot for extra content (live badge, category nav, etc.) -->
+      <slot />
+
+      <!-- CTAs -->
+      {
+        (cta || ctaSecondary) && (
+          <div class={`flex flex-col sm:flex-row gap-3 mt-6 ${align === "center" ? "justify-center" : ""}`}>
+            {cta && (
+              <Button href={cta.href} variant="primary" size="lg" target={cta.target}>
+                {cta.label}
+              </Button>
+            )}
+            {ctaSecondary && (
+              <Button href={ctaSecondary.href} variant="outline" size="lg" target={ctaSecondary.target}>
+                {ctaSecondary.label}
+              </Button>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

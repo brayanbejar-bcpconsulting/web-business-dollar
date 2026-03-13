@@ -1,0 +1,62 @@
+---
+/**
+ * FeatureGrid.astro
+ * Section with optional heading/subtext + grid of FeatureCards.
+ * Referencia: docs/patterns/design-system.md → "Feature grid"
+ */
+
+import FeatureCard from "../molecules/FeatureCard.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+interface FeatureItem {
+  title: string;
+  body: string;
+  icon: string;
+  iconSize?: "sm" | "md";
+}
+
+interface Props {
+  items: FeatureItem[];
+  cols?: 2 | 3 | 4;
+  heading?: string;
+  subtext?: string;
+  id?: string;
+  bg?: string;
+  sectionId?: string;
+  align?: "left" | "center";
+}
+
+const {
+  items,
+  cols = 3,
+  heading,
+  subtext,
+  bg = "bg-white",
+  sectionId,
+  align = "center",
+} = Astro.props;
+
+const gridCols = {
+  2: "sm:grid-cols-2",
+  3: "sm:grid-cols-2 lg:grid-cols-3",
+  4: "sm:grid-cols-2 lg:grid-cols-4",
+};
+---
+
+<section class={`${bg} py-16`} id={sectionId} aria-labelledby={heading ? "feature-grid-heading" : undefined}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {
+      heading && (
+        <SectionHeader
+          heading={heading}
+          subtext={subtext}
+          align={align}
+          id="feature-grid-heading"
+        />
+      )
+    }
+    <div class={`grid gap-6 ${gridCols[cols]}`}>
+      {items.map((item) => <FeatureCard {...item} />)}
+    </div>
+  </div>
+</section>

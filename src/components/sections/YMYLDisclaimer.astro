@@ -1,0 +1,44 @@
+---
+/**
+ * YMYLDisclaimer.astro
+ * Amber YMYL/financial disclaimer banner. Unified treatment across all pages.
+ * Always amber: bg-amber-50 border-b border-amber-200.
+ * Referencia: docs/patterns/seo-rules.md → YMYL disclaimers
+ */
+
+interface Props {
+  message?: string;
+}
+
+const DEFAULT_MESSAGE =
+  "Business Dollar es una casa de cambio digital regulada por la SBS. El tipo de cambio varía constantemente. Los valores son referenciales y se confirman al iniciar la operación.";
+
+const { message = DEFAULT_MESSAGE } = Astro.props;
+---
+
+<div class="bg-amber-50 border-b border-amber-200" role="note" aria-label="Aviso financiero">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-xs text-amber-800">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="shrink-0"
+      aria-hidden="true"
+    >
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+      <path d="M12 9v4" />
+      <path d="M12 17h.01" />
+    </svg>
+    <span>
+      <strong>Aviso financiero:</strong>
+      {" "}
+      <span set:html={message} />
+    </span>
+  </div>
+</div>

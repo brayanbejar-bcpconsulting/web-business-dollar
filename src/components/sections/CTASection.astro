@@ -1,0 +1,123 @@
+---
+/**
+ * CTASection.astro
+ * Solid-color CTA band at bottom of page.
+ *
+ * variant:
+ *   "primary"  — bg-primary-600 (default)
+ *   "dark"     — bg-neutral-900
+ *   "gradient" — bg-gradient-to-br from-primary-700 via-primary-600 to-primary-700
+ *
+ * Referencia: docs/patterns/design-system.md → "CTA section"
+ */
+
+import Button from "../atoms/Button.astro";
+
+interface CTASecondary {
+  label: string;
+  href: string;
+  target?: string;
+}
+
+interface Props {
+  heading: string;
+  subtext?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  ctaSecondary?: CTASecondary;
+  variant?: "primary" | "dark" | "gradient";
+  note?: string;
+}
+
+const APP_URL = "https://app.business-dollar.pe/register";
+
+const {
+  heading,
+  subtext,
+  ctaLabel = "Abrir cuenta gratis",
+  ctaHref = APP_URL,
+  ctaSecondary,
+  variant = "primary",
+  note,
+} = Astro.props;
+
+const bgClasses = {
+  primary: "bg-primary-600",
+  dark: "bg-neutral-900",
+  gradient: "bg-gradient-to-br from-primary-700 via-primary-600 to-primary-700",
+};
+
+const subtextColor = {
+  primary: "text-primary-100",
+  dark: "text-neutral-400",
+  gradient: "text-primary-100",
+};
+
+const noteColor = {
+  primary: "text-primary-200",
+  dark: "text-neutral-500",
+  gradient: "text-primary-200",
+};
+
+const primaryBtnClasses =
+  variant === "primary" || variant === "gradient"
+    ? "bg-white text-primary-700 hover:bg-primary-50"
+    : "bg-primary-600 text-white hover:bg-primary-700";
+---
+
+<section class={`${bgClasses[variant]} py-16`} aria-labelledby="cta-section-heading">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <slot name="above" />
+
+    <h2
+      id="cta-section-heading"
+      class="font-display text-2xl md:text-3xl font-bold text-white mb-4 leading-tight"
+    >
+      {heading}
+    </h2>
+
+    {subtext && <p class={`${subtextColor[variant]} mb-8 leading-relaxed`}>{subtext}</p>}
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a
+        href={ctaHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={`inline-flex items-center justify-center gap-2 ${primaryBtnClasses} font-bold px-8 py-4 rounded-xl transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white`}
+      >
+        {ctaLabel}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
+        </svg>
+      </a>
+
+      {
+        ctaSecondary && (
+          <Button
+            href={ctaSecondary.href}
+            variant="outline"
+            size="lg"
+            target={ctaSecondary.target}
+            class="border-white text-white hover:bg-white/10"
+          >
+            {ctaSecondary.label}
+          </Button>
+        )
+      }
+    </div>
+
+    {note && <p class={`${noteColor[variant]} text-xs mt-4`}>{note}</p>}
+  </div>
+</section>
