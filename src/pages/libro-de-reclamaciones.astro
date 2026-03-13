@@ -8,6 +8,7 @@
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import { company } from "../data/company";
+import YMYLDisclaimer from "../components/sections/YMYLDisclaimer.astro";
 
 const today = new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" });
 
@@ -43,9 +44,7 @@ const schema = {
           </div>
         </div>
 
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
-          <strong>Aviso legal:</strong> Conforme a la Ley N.° 29571 (Código de Protección y Defensa del Consumidor) y al Decreto Supremo N.° 011-2011-PCM, los proveedores de productos y servicios están obligados a contar con un Libro de Reclamaciones. El plazo máximo para nuestra respuesta es de <strong>30 días hábiles</strong>.
-        </div>
+        <YMYLDisclaimer message="Conforme a la Ley N.° 29571 (Código de Protección y Defensa del Consumidor) y al Decreto Supremo N.° 011-2011-PCM, los proveedores de productos y servicios están obligados a contar con un Libro de Reclamaciones. El plazo máximo para nuestra respuesta es de 30 días hábiles." />
       </div>
 
       <!-- Diferencia queja vs reclamo -->

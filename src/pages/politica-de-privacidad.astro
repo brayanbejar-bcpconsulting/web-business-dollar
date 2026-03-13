@@ -7,6 +7,7 @@
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import { company } from "../data/company";
+import PageHero from "../components/sections/PageHero.astro";
 
 const today = new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" });
 
@@ -93,17 +94,13 @@ const sections = [
   schema={schema}
   breadcrumbs={[{ label: "Política de privacidad", href: "/politica-de-privacidad" }]}
 >
-  <section class="py-16 bg-white" aria-labelledby="privacidad-heading">
+  <PageHero
+    heading="Política de Privacidad"
+    subheading={`Última actualización: ${today} · ${company.legalName}`}
+    align="left"
+  />
+  <section class="py-16 bg-white" aria-label="Política de privacidad">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="mb-10 pb-6 border-b border-neutral-200">
-        <h1 id="privacidad-heading" class="font-display text-4xl font-bold text-neutral-900 mb-3">
-          Política de Privacidad
-        </h1>
-        <p class="text-neutral-500 text-sm">
-          Última actualización: {today} · {company.legalName}
-        </p>
-      </div>
 
       <div class="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
         En Business Dollar nos comprometemos a proteger tu privacidad y tus datos personales conforme a la <strong>Ley N.° 29733</strong> de Protección de Datos Personales del Perú y sus normas reglamentarias.

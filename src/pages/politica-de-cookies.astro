@@ -8,6 +8,7 @@
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import { company } from "../data/company";
+import PageHero from "../components/sections/PageHero.astro";
 
 const today = new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" });
 
@@ -70,19 +71,13 @@ const cookieTypes = [
   schema={schema}
   breadcrumbs={[{ label: "Política de cookies", href: "/politica-de-cookies" }]}
 >
-  <section class="py-16 bg-white" aria-labelledby="cookies-heading">
+  <PageHero
+    heading="Política de Cookies"
+    subheading={`Última actualización: ${today} · ${company.legalName}`}
+    align="left"
+  />
+  <section class="py-16 bg-white" aria-label="Política de cookies">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="mb-10 pb-6 border-b border-neutral-200">
-        <h1 id="cookies-heading" class="font-display text-4xl font-bold text-neutral-900 mb-3">
-          Política de Cookies
-        </h1>
-        <p class="text-neutral-500 text-sm">
-          Última actualización: {today} · {company.legalName}
-        </p>
-      </div>
-
-      <!-- Intro -->
       <div class="prose prose-neutral max-w-none text-sm text-neutral-700 leading-relaxed mb-10 space-y-4">
         <p>
           Business Dollar ({company.legalName}) usa cookies y tecnologías similares en su sitio web (<a href={company.url} class="text-accent-600 hover:underline">{company.url}</a>) y en su aplicación (<a href={company.appUrl} class="text-accent-600 hover:underline">{company.appUrl}</a>). Esta política te explica qué son las cookies, cuáles usamos y cómo puedes gestionarlas.
