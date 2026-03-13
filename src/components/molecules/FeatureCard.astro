@@ -1,0 +1,28 @@
+---
+/**
+ * FeatureCard.astro
+ * Icon box + title + body card used in benefit/feature grids.
+ * Referencia: docs/patterns/design-system.md → "Feature cards"
+ */
+
+interface Props {
+  title: string;
+  body: string;
+  icon: string;
+  iconSize?: "sm" | "md";
+}
+
+const { title, body, icon, iconSize = "md" } = Astro.props;
+
+const boxSize = iconSize === "sm" ? "w-10 h-10" : "w-11 h-11";
+---
+
+<div class="group rounded-xl border border-neutral-200 bg-white p-6 hover:border-primary-300 hover:shadow-sm transition-all duration-200">
+  <div
+    class={`${boxSize} flex items-center justify-center rounded-lg bg-primary-50 text-primary-600 mb-4 group-hover:bg-primary-100 transition-colors duration-200`}
+    aria-hidden="true"
+    set:html={icon}
+  />
+  <h3 class="font-semibold text-neutral-900 mb-2 leading-snug">{title}</h3>
+  <p class="text-sm text-neutral-600 leading-relaxed">{body}</p>
+</div>

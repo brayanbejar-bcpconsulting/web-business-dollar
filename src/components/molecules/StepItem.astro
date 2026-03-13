@@ -1,0 +1,38 @@
+---
+/**
+ * StepItem.astro
+ * Numbered step with icon box, title and description.
+ * Used inside an <ol> on how-it-works sections.
+ * Referencia: docs/patterns/design-system.md → "Steps"
+ */
+
+interface Props {
+  n: string | number;
+  title: string;
+  body: string;
+  icon: string;
+}
+
+const { n, title, body, icon } = Astro.props;
+---
+
+<li class="flex flex-col items-start gap-4">
+  <!-- Step number + icon box -->
+  <div class="flex items-center gap-3">
+    <span
+      class="flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white font-bold text-sm shrink-0"
+      aria-hidden="true"
+    >
+      {n}
+    </span>
+    <div
+      class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-50 text-primary-600"
+      aria-hidden="true"
+      set:html={icon}
+    />
+  </div>
+  <div>
+    <h3 class="font-semibold text-neutral-900 mb-1 leading-snug">{title}</h3>
+    <p class="text-sm text-neutral-600 leading-relaxed">{body}</p>
+  </div>
+</li>

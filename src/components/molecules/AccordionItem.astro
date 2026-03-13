@@ -1,0 +1,43 @@
+---
+/**
+ * AccordionItem.astro
+ * FAQ accordion using native <details>/<summary> with chevron animation.
+ * Referencia: docs/patterns/design-system.md → "Accordion"
+ */
+
+interface Props {
+  question: string;
+  answer: string;
+  open?: boolean;
+}
+
+const { question, answer, open = false } = Astro.props;
+---
+
+<details class="group rounded-xl border border-neutral-200 bg-white" open={open}>
+  <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 text-base font-semibold text-neutral-800 hover:text-primary-700 transition-colors duration-150 list-none">
+    <span>{question}</span>
+    <span
+      class="shrink-0 text-neutral-400 group-open:rotate-180 transition-transform duration-200"
+      aria-hidden="true"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m6 9 6 6 6-6" />
+      </svg>
+    </span>
+  </summary>
+  <div
+    class="px-5 pb-5 text-sm text-neutral-600 leading-relaxed border-t border-neutral-100 pt-3"
+    set:html={answer}
+  />
+</details>
