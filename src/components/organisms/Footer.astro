@@ -12,6 +12,7 @@
  */
 
 import { company, social } from "../../data/company";
+import SBSBadge from "../atoms/SBSBadge.astro";
 
 const footerNav = [
   {
@@ -20,7 +21,7 @@ const footerNav = [
       { label: "Comprar dólares", href: "/servicios#comprar" },
       { label: "Vender dólares", href: "/servicios#vender" },
       { label: "Tipo de cambio", href: "/tipo-de-cambio" },
-      { label: "Calculadora de cambio", href: "/servicios#calculadora" },
+      { label: "Calculadora de cambio", href: "/calculadora-tipo-de-cambio" },
     ],
   },
   {
@@ -77,23 +78,8 @@ const currentYear = new Date().getFullYear();
           Casa de cambio digital regulada por la SBS. Cambia dólares online de forma segura y al mejor tipo de cambio del mercado.
         </p>
         <!-- SBS badge -->
-        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-neutral-800 border border-neutral-700 text-xs text-neutral-300">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="text-primary-400 shrink-0"
-            aria-hidden="true"
-          >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-          </svg>
-          <span>Regulado por la <strong class="text-white">SBS</strong></span>
+        <div class="mt-4">
+          <SBSBadge variant="dark" />
         </div>
       </div>
 
